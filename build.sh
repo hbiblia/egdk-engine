@@ -1,0 +1,1 @@
+cmake -B build && ninja -C build && ./bin/egdk-editor
