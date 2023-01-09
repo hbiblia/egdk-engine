@@ -5,6 +5,7 @@ set(source
     "src/level-editor/toolbar_main/ui-toolbar.c"
     "src/level-editor/viewport/docked-viewport.c"
     "src/level-editor/browser/docked-browser.c"
+    "src/level-editor/browser/browserViewFileType.c"
     "src/level-editor/tiled/docked-tiled.c"
     )
     

@@ -4,6 +4,7 @@
         "level-editor.h": "c",
         "tiled.h": "c",
         "browser.h": "c",
-        "viewport.h": "c"
+        "viewport.h": "c",
+        "browserviewfiletype.h": "c"
     }
 }
