@@ -23,7 +23,8 @@ struct _BrowserViewClass
     GObjectClass parent_class;
 };
 
-static BrowserView *browser_view_new(const gchar *name, const gchar *filename);
+BrowserView *browser_view_new(const gchar *name, const GdkPixbuf *image);
+
 const GdkPixbuf *browser_view_app_get_icon(BrowserView *view);
+
 const gchar *browser_view_app_get_name(BrowserView *view);
-GListStore *browser_view_get_content(void);

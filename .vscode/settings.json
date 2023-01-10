@@ -5,6 +5,8 @@
         "tiled.h": "c",
         "browser.h": "c",
         "viewport.h": "c",
-        "browserviewfiletype.h": "c"
+        "browserviewfiletype.h": "c",
+        "browsercontent.h": "c",
+        "browserviewcontent.h": "c"
     }
 }

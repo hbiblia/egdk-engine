@@ -19,12 +19,11 @@ static void browser_view_init(BrowserView *self)
 {
 }
 
-static BrowserView *browser_view_new(const gchar *name, const gchar *filename)
+BrowserView *browser_view_new(const gchar *name, const GdkPixbuf *image)
 {
     BrowserView *b = g_object_new(browser_view_get_type(), NULL);
     b->name = g_strdup(name);
-    // TODO: Cambiar en la proxima version, hacer esto fuera.
-    b->image = gdk_pixbuf_new_from_file_at_scale(filename, 64, 64, TRUE, NULL);
+    b->image = image;
     return b;
 }
 
@@ -36,15 +35,4 @@ const GdkPixbuf *browser_view_app_get_icon(BrowserView *view)
 const gchar *browser_view_app_get_name(BrowserView *view)
 {
     return g_strdup(view->name);
-}
-
-GListStore *browser_view_get_content(void)
-{
-    GListStore *store = g_list_store_new(browser_view_get_type());
-
-    g_list_store_append(store, browser_view_new("Pokemon","bin/JG_Color.png"));
-    g_list_store_append(store, browser_view_new("Pika Pika","bin/JG_Color.png"));
-    g_list_store_append(store, browser_view_new("StartBolita","bin/JG_Color.png"));
-
-    return store;
 }

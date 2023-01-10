@@ -1,10 +1,29 @@
 #include "browser.h"
 #include "browserViewFileType.h"
+#include "browserViewContent.h"
+
+// TODO:
+// [-] Quitar la autoSelection
+// [-] Cargar los archivos del proyecto
+// [-] Implementar el buscador o filtro
+// [-] Drag and Drop (Viewport)
+// [-] Sqlite3 referencia de elementos.
+// ** Etapa 2 **
+// [-] Drag and Drop (Folder)
+// [-] Crea Folder
+// [-] Borrar y crear archivos
+// [-] Importar contenido
+// [-] Menu flotante o context-menu
+// [-] Cambiar entre tipos de vista (icon, list)
 
 static GListModel *_grid_view_model()
 {
-    GListStore *store;
-    store = browser_view_get_content();
+    // Este es temporal, cuando tengamos la forma de cargar un proyecto se movera.
+    browserInit("D:/Github/egdk-engine/examples/sprites");
+
+    GListStore *store = g_list_store_new(browser_view_get_type());
+    browserViewContentDirCurrentPath(store, "");
+
     return G_LIST_MODEL(store);
 }
 
@@ -62,7 +81,7 @@ static GtkListItemFactory *_grid_view_factory()
 static void _search_entry(GtkSearchEntry *self, GListModel *model)
 {
     const gchar *search = gtk_editable_get_text(self);
-    g_print("Mira estoy buscando: %s\n", search);
+    browserViewContentDirCurrentPath(model, search);
 }
 
 GtkWidget *docked_browser(void)
@@ -75,7 +94,6 @@ GtkWidget *docked_browser(void)
     gtk_widget_set_margin_end(vbox, 5);
 
     GtkWidget *input_search = gtk_search_entry_new();
-    g_signal_connect(input_search, "search-changed", G_CALLBACK(_search_entry), model);
     gtk_box_append(GTK_BOX(vbox), input_search);
 
     GtkWidget *scrolled = gtk_scrolled_window_new();
@@ -85,9 +103,14 @@ GtkWidget *docked_browser(void)
     gtk_box_append(GTK_BOX(vbox), scrolled);
     {
         model = _grid_view_model();
-        GtkWidget *list = gtk_list_view_new(gtk_single_selection_new(model), _grid_view_factory());
+        GtkSingleSelection *s = gtk_single_selection_new(model);
+        gtk_single_selection_set_autoselect(s, TRUE);
+
+        GtkWidget *list = gtk_list_view_new(s, _grid_view_factory());
         gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolled), list);
     }
+
+    g_signal_connect(input_search, "search-changed", G_CALLBACK(_search_entry), model);
 
     return vbox;
 }
