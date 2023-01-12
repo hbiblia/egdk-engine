@@ -19,12 +19,9 @@ pkg_check_modules(EPOXY REQUIRED epoxy)
 pkg_check_modules(SQLITE REQUIRED sqlite3)
 pkg_check_modules(JSON REQUIRED json-glib-1.0)
 
-add_executable(egdk-editor ${source})
+add_executable(egdk-editor ${source} ${utility_src} ${renderer_src})
 
 include_directories(${GTK_INCLUDE_DIRS} ${EPOXY_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
 link_directories(${GTK_LIBRARY_DIRS} ${EPOXY_LIBRARY_DIRS} ${SQLITE_LIBRARY_DIRS} ${JSON_LIBRARY_DIRS})
 
-#target_include_directories(egdk-editor PUBLIC ${CMAKE_INCLUDE_CURRENT_DIR}/library)
-#target_link_directories(egdk-editor PUBLIC ${CMAKE_INCLUDE_CURRENT_DIR}/library)
-
-target_link_libraries(egdk-editor ${GTK_LIBRARIES} ${EPOXY_LIBRARIES} ${SQLITE_LIBRARIES} ${JSON_LIBRARIES})
+target_link_libraries(egdk-editor ${link_renderer} ${GTK_LIBRARIES} ${EPOXY_LIBRARIES} ${SQLITE_LIBRARIES} ${JSON_LIBRARIES})

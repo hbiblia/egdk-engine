@@ -2,6 +2,8 @@
 #include "browserViewContent.h"
 #include "browserContent.h"
 #include "browserViewFileType.h"
+#include "utility/path_fn.h"
+#include "utility/file_fn.h"
 
 const gchar *path_current = "";
 
@@ -12,63 +14,6 @@ typedef struct
     BrowserFileType type;
 } BrowserViewContentFile;
 
-/*
- * Name: browserViewContentStringReplace
- * Private
- * Params: (const char *str, const char *find, const char *replace)
- * Return: char *
- * Desc: Remplazamos un string por otro string
- */
-char *browserViewContentStringReplace(const char *str, const char *find, const char *replace)
-{
-    GString *gstr = g_string_new(str);
-    g_string_replace(gstr, find, replace, 0);
-    return g_string_free(gstr, false);
-}
-
-/*
- * Name: browserViewContentPathNormalize
- * Private
- * Params: (const char *path)
- * Return: char *
- * Desc: Normalizamos el path
- */
-char *browserViewContentPathNormalize(const char *path)
-{
-    char *new_path = NULL;
-#if defined(_WIN32)
-    new_path = browserViewContentStringReplace(path, "/", "\\");
-#else
-    new_path = browserViewContentStringReplace(path, "\\", "/");
-#endif
-    return new_path;
-}
-
-/*
- * Name: browserViewContentFileGetExt
- * Private
- * Params: (const gchar *filename)
- * Return: const gchar *
- * Desc: Obtenemos la ext de un archivo
- */
-const gchar *browserViewContentFileGetExt(const gchar *filename)
-{
-    const gchar *dot = strrchr(filename, '.');
-    return (!dot || dot == filename) ? "" : (dot + 1);
-}
-
-/*
- * Name: browserViewContentFileIsExt
- * Private
- * Params: (const gchar *filename)
- * Return: gboolean
- * Desc: Comprobamos si un filename tiene la ext
- */
-gboolean browserViewContentFileIsExt(const gchar *filename, const gchar *ext)
-{
-    const gchar *ext_o = browserViewContentFileGetExt(filename);
-    return strcmp(ext_o, ext) == 0 ? TRUE : FALSE;
-}
 
 /*
  * Name: browserViewContentDirPath
@@ -98,25 +43,25 @@ static GPtrArray *browserViewContentDirPath(const gchar *path)
     {
         BrowserViewContentFile *file = g_new0(BrowserViewContentFile, 1);
         file->name = g_strdup(filename);
-        file->path = browserViewContentPathNormalize(g_build_filename(project_path, filename, NULL));
+        file->path = PathNormalize(g_build_filename(project_path, filename, NULL));
 
         if (g_file_test(file->path, G_FILE_TEST_IS_DIR))
         {
             file->type = BROWSER_FILE_T_FOLDER;
         }
-        else if (browserViewContentFileIsExt(file->path, "jpg") || browserViewContentFileIsExt(file->path, "png"))
+        else if (FileIsExtension(file->path, "jpg") || FileIsExtension(file->path, "png"))
         {
             file->type = BROWSER_FILE_T_TEXTURE;
         }
-        else if (browserViewContentFileIsExt(file->path, "lua"))
+        else if (FileIsExtension(file->path, "lua"))
         {
             file->type = BROWSER_FILE_T_LUA;
         }
-        else if (browserViewContentFileIsExt(file->path, "tiled"))
+        else if (FileIsExtension(file->path, "tiled"))
         {
             file->type = BROWSER_FILE_T_TILED;
         }
-        else if (browserViewContentFileIsExt(file->path, "json"))
+        else if (FileIsExtension(file->path, "json"))
         {
             file->type = BROWSER_FILE_T_JSON;
         }

@@ -7,6 +7,13 @@
         "viewport.h": "c",
         "browserviewfiletype.h": "c",
         "browsercontent.h": "c",
-        "browserviewcontent.h": "c"
+        "browserviewcontent.h": "c",
+        "string_fn.h": "c",
+        "stdio.h": "c",
+        "renderer.h": "c",
+        "sokol_gfx.h": "c",
+        "math.h": "c",
+        "sokol_gl.h": "c",
+        "rmath.h": "c"
     }
 }
