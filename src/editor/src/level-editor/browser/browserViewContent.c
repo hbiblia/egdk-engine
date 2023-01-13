@@ -2,8 +2,8 @@
 #include "browserViewContent.h"
 #include "browserContent.h"
 #include "browserViewFileType.h"
-#include "utility/path_fn.h"
-#include "utility/file_fn.h"
+#include "path_fn.h"
+#include "file_fn.h"
 
 const gchar *path_current = "";
 

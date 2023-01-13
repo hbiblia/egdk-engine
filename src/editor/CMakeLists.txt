@@ -9,6 +9,7 @@ set(source
     "src/level-editor/browser/browserViewContent.c"
     "src/level-editor/browser/browserViewFileType.c"
     "src/level-editor/tiled/docked-tiled.c"
+    "src/level-editor/gtk-renderer-embed/gtk-renderer-embed.c"
     )
     
 # Cuando estemos en la etapa2 dejaremos de utilizar pkg-config
@@ -19,9 +20,9 @@ pkg_check_modules(EPOXY REQUIRED epoxy)
 pkg_check_modules(SQLITE REQUIRED sqlite3)
 pkg_check_modules(JSON REQUIRED json-glib-1.0)
 
-add_executable(egdk-editor ${source} ${utility_src} ${renderer_src})
+add_executable(egdk-editor ${source})
 
-include_directories(${GTK_INCLUDE_DIRS} ${EPOXY_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
-link_directories(${GTK_LIBRARY_DIRS} ${EPOXY_LIBRARY_DIRS} ${SQLITE_LIBRARY_DIRS} ${JSON_LIBRARY_DIRS})
+include_directories(utility renderer ${RENDERER_INCLUDE_DIRS} ${GTK_INCLUDE_DIRS} ${EPOXY_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${JSON_INCLUDE_DIRS})
+link_directories(utility renderer ${GTK_LIBRARY_DIRS} ${EPOXY_LIBRARY_DIRS} ${SQLITE_LIBRARY_DIRS} ${JSON_LIBRARY_DIRS})
 
-target_link_libraries(egdk-editor ${link_renderer} ${GTK_LIBRARIES} ${EPOXY_LIBRARIES} ${SQLITE_LIBRARIES} ${JSON_LIBRARIES})
+target_link_libraries(egdk-editor utility renderer ${GTK_LIBRARIES} ${EPOXY_LIBRARIES} ${SQLITE_LIBRARIES} ${JSON_LIBRARIES})

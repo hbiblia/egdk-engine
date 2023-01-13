@@ -4,8 +4,8 @@
 #define SOKOL_IMPL
 #define SOKOL_GLCORE33
 #define SOKOL_EXTERNAL_GL_LOADER
-#include "sokol_gfx.h"
-#include "sokol_gl.h"
+#include "sokol/sokol_gfx.h"
+#include "sokol/sokol_gl.h"
 
 static struct
 {
