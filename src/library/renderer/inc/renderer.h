@@ -11,6 +11,8 @@ void renderer_resize(int width, int height);
 void renderer_shutdown(void);
 rvect2 renderer_get_size(void);
 
+double renderer_delta_time(void);
+
 void renderer_push_matrix(void);
 void renderer_pop_matrix(void);
 void renderer_begin_quads(void);

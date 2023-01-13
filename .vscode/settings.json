@@ -17,6 +17,7 @@
         "rmath.h": "c",
         "gtk-sokol.h": "c",
         "path_fn.h": "c",
-        "gtk-renderer-embed.h": "c"
+        "gtk-renderer-embed.h": "c",
+        "sokol_time.h": "c"
     }
 }

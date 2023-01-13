@@ -44,43 +44,26 @@ static void gtk_sokol_embed_class_init(GtkSokolEmbedClass *klass)
 
 static gboolean tick(GtkWidget *widget, GdkFrameClock *frame_clock, gpointer data)
 {
-    GdkFrameTimings *timings, *pv_timings;
-    gint64 pv_frame_time = 0, frame_time, last_frame_time;
-    gint64 history_start, history_len;
-    gint64 frame;
-
-    GtkSokolEmbedPrivate *priv = gtk_sokol_embed_get_instance_private(GTK_SOKOL_EMBED(widget));
+    GtkSokolEmbedPrivate *priv = gtk_sokol_embed_get_instance_private(widget);
+    GdkFrameTimings *prv_timings;
+    gint64 prv_frame_time, frame_time, h_start, h_len, frame;
 
     frame = gdk_frame_clock_get_frame_counter(frame_clock);
     frame_time = gdk_frame_clock_get_frame_time(frame_clock);
 
     gtk_widget_queue_draw(widget);
-
-    history_start = gdk_frame_clock_get_history_start(frame_clock);
+    h_start = gdk_frame_clock_get_history_start(frame_clock);
 
     if (frame % priv->fpsLimit == 0)
     {
-        history_len = frame - history_start;
-        if (history_len > 0)
+        h_len = frame - h_start;
+        if (h_len > 0)
         {
-            pv_timings = gdk_frame_clock_get_timings(frame_clock, frame - history_len);
-            pv_frame_time = gdk_frame_timings_get_frame_time(pv_timings);
-            priv->fpsStat = (G_USEC_PER_SEC * history_len) / (double)(frame_time - pv_frame_time);
+            prv_timings = gdk_frame_clock_get_timings(frame_clock, frame - h_len);
+            prv_frame_time = gdk_frame_timings_get_frame_time(prv_timings);
+            priv->fpsStat = (G_USEC_PER_SEC * h_len) / (double)(frame_time - prv_frame_time);
         }
     }
-
-    guint64 current_time = g_get_monotonic_time();
-    priv->g_Time = current_time;
-    gfloat delta = ((gfloat)(current_time - priv->g_Time) / 1000000);
-
-    timings = gdk_frame_clock_get_current_timings(frame_clock);
-    pv_timings = gdk_frame_clock_get_timings(frame_clock, gdk_frame_timings_get_frame_counter(timings) - 1);
-
-    if (pv_timings != NULL)
-        pv_frame_time = gdk_frame_timings_get_frame_time(pv_timings);
-
-    priv->delta = delta;
-    g_print("BB: %f\n", priv->delta);
 
     return G_SOURCE_CONTINUE;
 }
@@ -91,10 +74,8 @@ static void gtk_sokol_embed_init(GtkSokolEmbed *embed)
 
     priv->fpsLimit = 30;
     priv->bInit = FALSE;
-    priv->g_Time = 0;
-    priv->delta = 0;
 
-    gtk_widget_add_tick_callback(GTK_WIDGET(embed), tick, embed, NULL);
+    priv->id = gtk_widget_add_tick_callback(GTK_WIDGET(embed), tick, embed, NULL);
 }
 
 static void realize(GtkSokolEmbed *embed, gpointer data)
@@ -109,6 +90,9 @@ static void unrealize(GtkSokolEmbed *embed, gpointer data)
     gtk_gl_area_make_current(GTK_GL_AREA(embed));
     if (gtk_gl_area_get_error(GTK_GL_AREA(embed)) != NULL)
         return;
+
+    GtkSokolEmbedPrivate *priv = gtk_sokol_embed_get_instance_private(embed);
+    gtk_widget_remove_tick_callback(embed, priv->id);
 
     g_signal_emit(embed, _signals[SOKOL_SIGNAL_SHUTDOWN], 0, embed);
 
@@ -147,10 +131,13 @@ static gboolean render(GtkSokolEmbed *embed, gpointer data)
     if (gtk_gl_area_get_error(GTK_GL_AREA(embed)) != NULL)
         return FALSE;
 
+    GtkSokolEmbedPrivate *priv = gtk_sokol_embed_get_instance_private(embed);
+
+    priv->delta = renderer_delta_time() / 1000.0f;
+
     rcamera_begin();
     {
-        gfloat delta = gtk_sokol_embed_get_delta(embed);
-        g_signal_emit(embed, _signals[SOKOL_SIGNAL_RENDER], 0, delta);
+        g_signal_emit(embed, _signals[SOKOL_SIGNAL_RENDER], 0, priv->delta);
     }
     rcamera_end();
 

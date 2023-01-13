@@ -7,6 +7,8 @@
 #include "sokol/sokol_gfx.h"
 #include "sokol/sokol_gl.h"
 
+#include "sokol/sokol_time.h"
+
 static struct
 {
     sg_pass_action pass;
@@ -14,6 +16,8 @@ static struct
     int buffer_width;
     int buffer_height;
     bool bInitRenderer;
+    uint64_t last_time;
+    double deltaTime;
 } state;
 
 void renderer_init(void)
@@ -21,8 +25,12 @@ void renderer_init(void)
     if (state.bInitRenderer)
         return;
 
+    stm_setup();
+
     sg_setup(&(sg_desc){0});
     sgl_setup(&(sgl_desc_t){0});
+
+    state.last_time = 0;
 
     state.pip = sgl_make_pipeline(&(sg_pipeline_desc){
         .cull_mode = SG_CULLMODE_BACK,
@@ -54,6 +62,8 @@ void renderer_frame(void)
     renderer_draw();
     sg_end_pass();
     sg_commit();
+
+    state.deltaTime = stm_ms(stm_laptime(&state.last_time));
 }
 
 void renderer_resize(int width, int height)
@@ -68,6 +78,11 @@ void renderer_shutdown(void)
 {
     sgl_shutdown();
     sg_shutdown();
+}
+
+double renderer_delta_time(void)
+{
+    return state.deltaTime;
 }
 
 rvect2 renderer_get_size(void)

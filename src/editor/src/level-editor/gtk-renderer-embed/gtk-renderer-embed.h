@@ -28,9 +28,9 @@ struct _GtkSokolEmbedPrivate
     gint width;
     gint height;
     gint fpsLimit;
-    guint g_Time;
     gfloat delta;
     gint fpsStat;
+    gint id;
 };
 
 GtkSokolEmbed *gtk_sokol_embed_new(void);
