@@ -12,5 +12,6 @@ include_directories(
 # 
 add_subdirectory(src/library/utility)
 add_subdirectory(src/library/renderer)
+add_subdirectory(src/library/actors)
 add_subdirectory(src/editor)
 add_subdirectory(src/game)

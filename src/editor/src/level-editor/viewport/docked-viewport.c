@@ -12,6 +12,8 @@ static rtransform t;
 static void on_sokol_render(gfloat delta)
 {
     t.rotation.z += 1.0f * delta;
+    // t.position.x = renderer_world_get_mouse_x();
+    // t.position.y = renderer_world_get_mouse_y();
     rshape_draw_rectangle(&(rshape_desc){.t = t, .w = 100, .h = 100, .color = {150, 0, 150, 255}});
 }
 

@@ -133,7 +133,7 @@ static gboolean render(GtkSokolEmbed *embed, gpointer data)
 
     GtkSokolEmbedPrivate *priv = gtk_sokol_embed_get_instance_private(embed);
 
-    priv->delta = renderer_delta_time() / 1000.0f;
+    priv->delta = renderer_world_delta_time() / 1000.0f;
 
     rcamera_begin();
     {
@@ -145,6 +145,31 @@ static gboolean render(GtkSokolEmbed *embed, gpointer data)
     glFlush();
 
     return TRUE;
+}
+
+
+static gboolean on_drop(GtkDropTarget *target, const GValue *value, gdouble x, gdouble y, gpointer data)
+{
+    g_print("DropTarget: %f,%f\n", x, y);
+
+    return TRUE;
+}
+
+static gboolean on_drop_enter(GtkDropTarget *target, gdouble x, gdouble y, gpointer data)
+{
+    g_print("DropTargetEnter: %f,%f\n", x, y);
+
+    return TRUE;
+}
+
+static void on_motion(GtkEventControllerMotion *controller, gdouble x, gdouble y, gpointer data)
+{
+    gtk_widget_set_can_focus(GTK_GL_AREA(data), TRUE);
+    gtk_widget_grab_focus(data);
+
+    g_print("EmbedMotion: %f,%f\n", x, y);
+
+    renderer_world_set_mouse_position(x, y);
 }
 
 GtkSokolEmbed *gtk_sokol_embed_new(void)
@@ -160,6 +185,21 @@ GtkSokolEmbed *gtk_sokol_embed_new(void)
     g_signal_connect(embed, "resize", G_CALLBACK(resize), NULL);
     g_signal_connect(embed, "unrealize", G_CALLBACK(unrealize), NULL);
     g_signal_connect(embed, "realize", G_CALLBACK(realize), NULL);
+
+    // Mouse move
+    GtkEventController *motion = gtk_event_controller_motion_new();
+    gtk_widget_add_controller(embed, GTK_EVENT_CONTROLLER(motion));
+    g_signal_connect(motion, "motion", G_CALLBACK(on_motion), embed);
+
+    // Drag
+    GtkDropTarget *target = gtk_drop_target_new(GDK_TYPE_FILE_LIST, GDK_ACTION_COPY);
+    gtk_drop_target_set_gtypes(target, (GType[1]){
+        G_TYPE_FILE,
+    },1);
+
+    g_signal_connect_swapped(target, "drop", G_CALLBACK(on_drop), embed);
+    g_signal_connect_swapped(target, "enter", G_CALLBACK(on_drop_enter), embed);
+    gtk_widget_add_controller(GTK_WIDGET(embed), GTK_EVENT_CONTROLLER(target));
 
     return embed;
 }

@@ -18,6 +18,8 @@ static struct
     bool bInitRenderer;
     uint64_t last_time;
     double deltaTime;
+    double world_mousex;
+    double world_mousey;
 } state;
 
 void renderer_init(void)
@@ -80,9 +82,25 @@ void renderer_shutdown(void)
     sg_shutdown();
 }
 
-double renderer_delta_time(void)
+double renderer_world_delta_time(void)
 {
     return state.deltaTime;
+}
+
+void renderer_world_set_mouse_position(double x, double y)
+{
+    state.world_mousex = x;
+    state.world_mousey = y;
+}
+
+double renderer_world_get_mouse_x(void)
+{
+    return state.world_mousex;
+}
+
+double renderer_world_get_mouse_y(void)
+{
+    return state.world_mousey;
 }
 
 rvect2 renderer_get_size(void)
@@ -148,9 +166,9 @@ void renderer_scissor_rect(int x, int y, int w, int h)
     sgl_scissor_rect(x, y, w, h, false);
 }
 
-void renderer_ortho(float l, float r, float b, float t, float n, float f)
+void renderer_ortho(float left, float right, float bottom, float top)
 {
-    sgl_ortho(l, r, b, t, n, f);
+    sgl_ortho(left, right, bottom, top, -0.01, 1000.0);
 }
 
 void renderer_viewport(float x, float y, float width, float height)

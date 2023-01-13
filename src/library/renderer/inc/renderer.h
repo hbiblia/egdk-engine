@@ -11,7 +11,10 @@ void renderer_resize(int width, int height);
 void renderer_shutdown(void);
 rvect2 renderer_get_size(void);
 
-double renderer_delta_time(void);
+double renderer_world_delta_time(void);
+void renderer_world_set_mouse_position(double x, double y);
+double renderer_world_get_mouse_x(void);
+double renderer_world_get_mouse_y(void);
 
 void renderer_push_matrix(void);
 void renderer_pop_matrix(void);
@@ -26,7 +29,7 @@ void renderer_projection(void);
 void renderer_v2f_c3b(float x, float y, uint8_t r, uint8_t g, uint8_t b);
 
 void renderer_scissor_rect(int x, int y, int w, int h);
-void renderer_ortho(float l, float r, float b, float t, float n, float f);
+void renderer_ortho(float left, float right, float bottom, float top);
 void renderer_viewport(float x, float y, float width, float height);
 
 void renderer_transform_begin(rtransform t);

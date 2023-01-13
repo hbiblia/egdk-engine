@@ -4,9 +4,9 @@
 static rcamera cameras[RCAMERA_LAST];
 static int camera_active = RCAMERA_NONE;
 
-void rcamera_ortho(float l, float r, float b, float t, float n, float f)
+void rcamera_ortho(float l, float r, float b, float t)
 {
-    renderer_ortho(l, r, b, t, n, f);
+    renderer_ortho(l, r, b, t);
 }
 
 void rcamera_viewport(rcamera camera)
@@ -54,7 +54,7 @@ void rcamera_begin(void)
     renderer_projection();
 
     float ortho_size = (aspect * scale);
-    rcamera_ortho(-ortho_size, +ortho_size, -scale, +scale, -1.0f, +1.0f);
+    rcamera_ortho(-ortho_size, +ortho_size, -scale, +scale);
     renderer_push_matrix();
 }
 

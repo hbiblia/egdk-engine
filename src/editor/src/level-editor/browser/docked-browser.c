@@ -16,6 +16,38 @@
 // [-] Menu flotante o context-menu
 // [-] Cambiar entre tipos de vista (icon, list)
 
+
+/*
+ *  GTK_?_DRAG AND DROP
+ *
+ *
+ */
+
+static void on_drag_begin(GtkDragSource *source, GdkDrag *drag, gpointer data)
+{
+    g_print("DragBegin\n");
+    GdkPaintable *paint = gtk_widget_paintable_new(GTK_WIDGET(data));
+    gtk_drag_source_set_icon(source, paint, 0, 0);
+    g_object_unref(paint);
+}
+
+static GdkContentProvider *on_drag_prepare(GtkDragSource *source, double x, double y, gpointer data)
+{
+    g_print("DragPrepare\n");
+
+    GFile *file = NULL;
+
+    return gdk_content_provider_new_union((GdkContentProvider*[1]){
+        gdk_content_provider_new_typed(G_TYPE_FILE, file),
+    },1);
+}
+
+/*
+ *  GTK_?_VIEW_MODEL
+ *
+ *
+ */
+
 static GListModel *_grid_view_model()
 {
     // Este es temporal, cuando tengamos la forma de cargar un proyecto se movera.
@@ -50,6 +82,11 @@ static void _factory_setup(GtkListItemFactory *factory, GtkListItem *list_item)
     gtk_label_set_wrap(GTK_LABEL(label), TRUE);
     gtk_label_set_wrap_mode(GTK_LABEL(label), PANGO_WRAP_WORD);
     gtk_box_append(GTK_BOX(box), GTK_LABEL(label));
+
+    GtkDragSource *drags = gtk_drag_source_new();
+    g_signal_connect(drags, "drag-begin", G_CALLBACK(on_drag_begin), image);
+    g_signal_connect(drags, "prepare", G_CALLBACK(on_drag_prepare), image);
+    gtk_widget_add_controller(GTK_WIDGET(box), GTK_EVENT_CONTROLLER(drags));
 
     gtk_list_item_set_child(list_item, box);
 }
@@ -108,6 +145,11 @@ GtkWidget *docked_browser(void)
 
         GtkWidget *list = gtk_list_view_new(s, _grid_view_factory());
         gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scrolled), list);
+
+        // GtkDragSource *drags = gtk_drag_source_new();
+        // g_signal_connect(drags, "drag-begin", G_CALLBACK(on_drag_begin), list);
+        // g_signal_connect(drags, "prepare", G_CALLBACK(on_drag_prepare), list);
+        // gtk_widget_add_controller(GTK_WIDGET(list), GTK_EVENT_CONTROLLER(drags));
     }
 
     g_signal_connect(input_search, "search-changed", G_CALLBACK(_search_entry), model);

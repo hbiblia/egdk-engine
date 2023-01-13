@@ -23,7 +23,7 @@ void rcamera_end();
 void rcamera_begin();
 void rcamera_viewport(rcamera camera);
 void rcamera_scissor(rcamera camera);
-void rcamera_ortho(float l, float r, float b, float t, float n, float f);
+void rcamera_ortho(float l, float r, float b, float t);
 void rcamera_active_set_default(void);
 void rcamera_active_set_size(int width, int height);
 
