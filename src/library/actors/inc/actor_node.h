@@ -1,7 +1,7 @@
 #ifndef ACTOR_NODE_H
 #define ACTOR_NODE_H
 #include <glib-object.h>
-#include "rmath.h"
+#include "pixel-math.h"
 
 G_BEGIN_DECLS
 

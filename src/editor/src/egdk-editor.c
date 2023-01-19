@@ -1,5 +1,6 @@
-
-/*
+/**
+ * EGDKEditor
+ *
  *
  *
  *
@@ -7,18 +8,24 @@
  */
 
 #include <stdio.h>
-#include <gtk/gtk.h>
-#include "level-editor/level-editor.h"
+#include "pixel.h"
+#include "panel-tool.h"
 
-static void on_activate(GtkApplication *app)
+static void init_fn()
 {
-    level_editor_ui(app);
+    printf("Init Pixel\n");
+}
+
+static void draw_fn(float deltaTime)
+{
+    panel_tool_draw();
 }
 
 int main(int argc, char *argv[])
 {
-    GtkApplication *app = gtk_application_new("com.egdk.egdkengine",
-                                              G_APPLICATION_FLAGS_NONE);
-    g_signal_connect(app, "activate", G_CALLBACK(on_activate), NULL);
-    return g_application_run(G_APPLICATION(app), argc, argv);
+    pixel_window_main(&(pixel_window_desc){
+        .title = "EGDKEditor - v0.0.1",
+        .init_fn = init_fn,
+        .draw_fn = draw_fn,
+    });
 }

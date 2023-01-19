@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.19)
 project(egdkProject)
-
+set(CMAKE_C_STANDARD 99)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../bin)
 
 include_directories( 
-    src/library/gtk-sokol/inc/
-    src/library/renderer/inc/
+    src/library/pixel/inc/
     src/library/utility/inc/
+    src/library/
  )
 
 # 
 add_subdirectory(src/library/utility)
-add_subdirectory(src/library/renderer)
+add_subdirectory(src/library/pixel)
 add_subdirectory(src/library/actors)
+add_subdirectory(src/library/cimgui)
 add_subdirectory(src/editor)
 add_subdirectory(src/game)

@@ -1,5 +1,5 @@
 #include "actor_node.h"
-#include "rtransform.h"
+#include "pixel-transform.h"
 
 G_DEFINE_TYPE_WITH_PRIVATE(ActorNode, actor_node, G_TYPE_OBJECT);
 
