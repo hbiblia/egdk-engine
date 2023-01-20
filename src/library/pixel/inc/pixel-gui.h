@@ -47,6 +47,15 @@ typedef enum
     SLIDER_INVALIDMASK_ = 0x7000000F,
 } enum_pixel_gui_slider_flags;
 
+typedef enum
+{
+    STYLE_COLOR_BUTTON = 21,
+    STYLE_COLOR_BUTTONHOVERED,
+    STYLE_COLOR_BUTTONACTIVE,
+} enum_pixel_gui_style_color;
+
+typedef void *pixel_gui_image_id;
+
 void pixel_gui__init(void);
 void pixel_gui__begin_frame(void);
 void pixel_gui__end_frame(void);
@@ -62,6 +71,7 @@ bool pixel_gui_button_sm(const char *label);
 bool pixel_gui_button(const char *label, float width, float height);
 bool pixel_gui_button_arrow(const char *label, enum_pixel_gui_dir dir);
 bool pixel_gui_button_hide(const char *id, float width, float height, enum_pixel_gui_button_flags flags);
+bool pixel_gui_button_image(const char *str_id, pixel_gui_image_id user_texture_id, const float width, const float height);
 
 void pixel_gui_text_next_wrap(bool wrap);
 void pixel_gui_text_next_color(float r, float g, float b);
@@ -77,13 +87,19 @@ bool pixel_gui_int2_slider(const char *label, int v[2], int v_min, int v_max, co
 bool pixel_gui_int3_slider(const char *label, int v[3], int v_min, int v_max, const char *format, enum_pixel_gui_slider_flags flags);
 bool pixel_gui_int4_slider(const char *label, int v[4], int v_min, int v_max, const char *format, enum_pixel_gui_slider_flags flags);
 
-bool pixel_gui_color3(const char* label, float col[3]);
-bool pixel_gui_color4(const char* label, float col[4]);
-bool pixel_gui_color_button(const char* desc_id, float col[4], float width, float height);
+bool pixel_gui_color3(const char *label, float col[3]);
+bool pixel_gui_color4(const char *label, float col[4]);
+bool pixel_gui_color_button(const char *desc_id, float col[4], float width, float height);
 
-void pixel_gui_begin_view_list();
+bool pixel_gui_begin_view_list(int item_width);
 void pixel_gui_end_view_list();
-void pixel_gui_push_view_list();
+void pixel_gui_begin_view_list_child();
+void pixel_gui_end_view_list_child();
+
+void pixel_gui_style_color(enum_pixel_gui_style_color type, float r, float g, float b, float a);
+void pixel_gui_style_color_clear(void);
+
+bool pixel_gui_input_text(const char *label, char *buffer);
 
 void pixel_gui_separator(void);
 void pixel_gui_end(void);

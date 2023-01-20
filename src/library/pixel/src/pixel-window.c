@@ -10,6 +10,7 @@
  */
 
 #include "pixel-window.h"
+#include "pixel-resource.h"
 
 // SOKOL IMPL
 #define SOKOL_IMPL
@@ -40,6 +41,8 @@ static void default_init_app(void)
             .value = {0.0f, 0.0f, 0.0f, 1.0f},
         },
     };
+
+    pixel_resource_init();
 
     if (desc_main->init_fn)
     {

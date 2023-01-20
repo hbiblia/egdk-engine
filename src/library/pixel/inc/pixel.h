@@ -15,5 +15,7 @@
 #include "pixel-gfx.h"
 #include "pixel-window.h"
 #include "pixel-gui.h"
+#include "pixel-resource.h"
+#include "pixel-texture.h"
 
 #endif

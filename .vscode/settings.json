@@ -63,6 +63,13 @@
         "locale": "c",
         "thread": "c",
         "xlocmes": "c",
-        "xlocnum": "c"
+        "xlocnum": "c",
+        "pixel-resource.h": "c",
+        "stdarg.h": "c",
+        "string.h": "c",
+        "file_fn.h": "c",
+        "pixel-texture.h": "c",
+        "editor-gui-browser.h": "c",
+        "editor-browser.h": "c"
     }
 }

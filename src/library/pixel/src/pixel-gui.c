@@ -7,6 +7,7 @@
  */
 
 #include "pixel-gui.h"
+#include <glib.h>
 
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui/cimgui.h"
@@ -30,6 +31,8 @@ struct pixel_gui_text_desc
 } gui_text_state;
 static struct pixel_gui_text_desc gui_text_state_save;
 
+static int view_list_childs_index_state = 0;
+
 void pixel_gui__init(void)
 {
     simgui_setup(&(simgui_desc_t){0});
@@ -43,6 +46,7 @@ void pixel_gui__begin_frame(void)
         .delta_time = pixel_window_delta_time(),
         .dpi_scale = pixel_window_dpi_scale(),
     });
+    view_list_childs_index_state = 0;
 }
 
 void pixel_gui__end_frame(void)
@@ -119,6 +123,19 @@ bool pixel_gui_button_arrow(const char *label, enum_pixel_gui_dir dir)
 {
     bool b_value = false;
     b_value = igArrowButton(label, dir);
+    return b_value;
+}
+
+bool pixel_gui_button_image(const char *str_id, pixel_gui_image_id user_texture_id, const float width, const float height)
+{
+    const ImVec2 size = (ImVec2){width, height};
+    const ImVec2 uv0 = (ImVec2){0, 0};
+    const ImVec2 uv1 = (ImVec2){1, 1};
+    const ImVec4 bg_col = (ImVec4){0, 0, 0, 0};
+    const ImVec4 tint_col = (ImVec4){1, 1, 1, 1};
+
+    bool b_value = false;
+    b_value = igImageButton(str_id, user_texture_id, size, uv0, uv1, bg_col, tint_col);
     return b_value;
 }
 
@@ -233,24 +250,21 @@ bool pixel_gui_int4_slider(const char *label, int v[4], int v_min, int v_max, co
  *
  */
 
-// CIMGUI_API bool igColorPicker4(const char* label,float col[4],ImGuiColorEditFlags flags,const float* ref_col);
-// CIMGUI_API bool igColorButton(const char* desc_id,const ImVec4 col,ImGuiColorEditFlags flags,const ImVec2 size);
-
-bool pixel_gui_color3(const char* label, float col[3])
+bool pixel_gui_color3(const char *label, float col[3])
 {
     bool b_value = false;
     b_value = igColorEdit3(label, col, ImGuiColorEditFlags_DefaultOptions_);
     return b_value;
 }
 
-bool pixel_gui_color4(const char* label, float col[4])
+bool pixel_gui_color4(const char *label, float col[4])
 {
     bool b_value = false;
     b_value = igColorEdit4(label, col, ImGuiColorEditFlags_DefaultOptions_);
     return b_value;
 }
 
-bool pixel_gui_color_button(const char* desc_id, float col[4], float width, float height)
+bool pixel_gui_color_button(const char *desc_id, float col[4], float width, float height)
 {
     ImVec4 new_color = (ImVec4){col[0], col[1], col[2], col[3]};
     bool b_value = false;
@@ -268,19 +282,43 @@ bool pixel_gui_color_button(const char* desc_id, float col[4], float width, floa
  *
  */
 
-void pixel_gui_begin_view_list()
+bool pixel_gui_begin_view_list(int item_width)
 {
-    igColumns(2, "view_list_test", true);
+    ImVec2 content_size;
+    igGetContentRegionAvail(&content_size);
+
+    int column = (int)(content_size.x / item_width);
+    return igBeginTable("view_list_test", column, ImGuiTableFlags_ScrollY, (ImVec2){0, 0}, 0.0f);
 }
 
 void pixel_gui_end_view_list()
 {
-    igColumns(1, "view_list_test", false);
+    igEndTable();
 }
 
-void pixel_gui_push_view_list()
+void pixel_gui_begin_view_list_child()
 {
-    igNextColumn();
+    igTableNextColumn();
+    igPushID_Str(g_strdup_printf("view_list_child_test_%d", view_list_childs_index_state));
+    view_list_childs_index_state += 1;
+}
+
+void pixel_gui_end_view_list_child()
+{
+    igPopID();
+}
+
+/**
+ * pixel-gui-input-text
+ * input-text
+ *
+ */
+
+bool pixel_gui_input_text(const char *label, char *buffer)
+{
+    bool b_value = false;
+    b_value = igInputText(label, buffer, 32, 0, NULL, NULL);
+    return b_value;
 }
 
 /**
@@ -288,6 +326,16 @@ void pixel_gui_push_view_list()
  * general
  *
  */
+
+void pixel_gui_style_color(enum_pixel_gui_style_color type, float r, float g, float b, float a)
+{
+    igPushStyleColor_Vec4(type, (ImVec4){r, g, b, a});
+}
+
+void pixel_gui_style_color_clear(void)
+{
+    igPopStyleColor(1);
+}
 
 void pixel_gui_separator(void)
 {

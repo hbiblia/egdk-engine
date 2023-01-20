@@ -15,8 +15,10 @@ typedef enum
 typedef struct
 {
     const char *name;
+    const char *filename;
     const char *ext;
     const char *path;
+    unsigned int image_id;
     FileTypeSupport type;
 } FileDirFile;
 
@@ -39,6 +41,15 @@ gboolean FileIsExtension(const gchar *filename, const gchar *ext);
 const gchar *FileGetExtension(const gchar *filename);
 
 /*
+ * Name: FileGetName
+ * Public
+ * Params: (const gchar *filename)
+ * Return: const gchar *
+ * Desc: Obtenemos el nombre sin la extension
+ */
+const char *FileGetName(const char *filename);
+
+/*
  * Name: FileReaddir
  * Public
  * Params: (const char *path)
@@ -46,5 +57,14 @@ const gchar *FileGetExtension(const gchar *filename);
  * Desc: Cargamos el contenido de un folder
  */
 GPtrArray *FileReaddir(const char *path);
+
+/*
+ * Name: FileReaddirFree
+ * Public
+ * Params: (GPtrArray *readder_cache)
+ * Return: void
+ * Desc: Liberarmos el FileReaddir
+ */
+void FileReaddirFree(GPtrArray *readder_cache);
 
 #endif

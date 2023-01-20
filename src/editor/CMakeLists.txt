@@ -3,6 +3,7 @@ set(source
     "src/egdk-editor.c"
     "src/panel-tool.c"
     "src/editor-gui-browser.c"
+    "src/editor-browser.c"
     )
     
 # Cuando estemos en la etapa2 dejaremos de utilizar pkg-config

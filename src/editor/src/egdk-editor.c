@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "pixel.h"
 #include "panel-tool.h"
+#include "pixel-resource.h"
 
 static void init_fn()
 {

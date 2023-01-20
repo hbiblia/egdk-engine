@@ -1,4 +1,7 @@
 #include "file_fn.h"
+#include "pixel-texture.h"
+#include "path_fn.h"
+#include "string_fn.h"
 
 /*
  * Name: FileIsExtension
@@ -21,6 +24,18 @@ const gchar *FileGetExtension(const gchar *filename)
 }
 
 /*
+ * Name: FileGetName
+ * Desc: Obtenemos el nombre sin la extension
+ */
+const char *FileGetName(const char *filename)
+{
+    char **value = StringSplit(filename, ".");
+    const char *result = value[0];
+    StringSplitFree(value);
+    return StringDup(result);
+}
+
+/*
  * Name: FileReaddir
  * Public
  * Params: (const char *path)
@@ -40,34 +55,60 @@ GPtrArray *FileReaddir(const char *path)
     while ((filename = g_dir_read_name(dir)) != NULL)
     {
         FileDirFile *file = g_new0(FileDirFile, 1);
-        file->name = g_strdup(filename);
+        file->name = FileGetName(filename);
+        file->filename = g_strdup(filename);
         file->path = g_strdup(path);
         file->ext = FileGetExtension(filename);
 
-        if (g_file_test(file->name, G_FILE_TEST_IS_DIR))
+        if (g_file_test(PathBuild(file->path, filename, NULL), G_FILE_TEST_IS_DIR))
         {
             file->type = FILE_FOLDER;
         }
-        else if (strcmp(file->ext, "jpg")==0 || strcmp(file->ext, "png")==0)
+        else if (strcmp(file->ext, "jpg") == 0 || strcmp(file->ext, "png") == 0)
         {
             file->type = FILE_TEXTURE;
         }
-        else if (strcmp(file->ext, "lua")==0)
+        else if (strcmp(file->ext, "lua") == 0)
         {
             file->type = FILE_LUA;
         }
-        else if (strcmp(file->ext, "json")==0)
+        else if (strcmp(file->ext, "json") == 0)
         {
             file->type = FILE_JSON;
         }
-        else if (strcmp(file->ext, "tiled")==0)
+        else if (strcmp(file->ext, "tiled") == 0)
         {
             file->type = FILE_TILED;
-        }else {
+        }
+        else
+        {
             continue;
         }
-
         g_ptr_array_add(cache_dir, file);
     }
     return cache_dir;
+}
+
+/*
+ * Name: FileReaddirFree
+ * Public
+ * Params: (GPtrArray *readder_cache)
+ * Return: void
+ * Desc: Liberarmos el FileReaddir
+ */
+void FileReaddirFree(GPtrArray *readder_cache)
+{
+    if (readder_cache == NULL)
+        return;
+
+    for (int i = 0; i < readder_cache->len; i++)
+    {
+        FileDirFile *file = g_ptr_array_index(readder_cache, i);
+        if (file->image_id != 0)
+        {
+            pixel_texture_free((pixel_texture_t){.id = file->image_id});
+        }
+        g_free(file);
+    }
+    g_ptr_array_free(readder_cache, TRUE);
 }
