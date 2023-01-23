@@ -16,8 +16,6 @@ gint browser_view_list_func_sorty(gconstpointer a, gconstpointer b)
 GPtrArray *browser_list_dir_content(const char *path)
 {
     GPtrArray *dirCurrentFolder = NULL;
-
-    FileReaddirFree(dirCurrentFolder);
     dirCurrentFolder = FileReaddir(path);
 
     g_ptr_array_sort(dirCurrentFolder, browser_view_list_func_sorty);
@@ -37,4 +35,19 @@ GPtrArray *browser_list_dir_content(const char *path)
     }
 
     return dirCurrentFolder;
+}
+
+void browser_home_path(void)
+{
+    prChangeCurrentContentFolder(prGetPath(RESOURCE_PATH_ASSETS_DEFAULT), NULL);
+}
+
+void browser_move_back_path(void)
+{
+    const char *path_current_new = g_dirname(prGetPath(RESOURCE_PATH_ASSETS_CURRENT));
+    const char *default_path = prGetPath(RESOURCE_PATH_ASSETS_DEFAULT);
+    if (strcmp(path_current_new, default_path) != 0)
+        return;
+
+    prChangeCurrentContentFolder(path_current_new, NULL);
 }

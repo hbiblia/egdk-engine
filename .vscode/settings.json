@@ -70,6 +70,11 @@
         "file_fn.h": "c",
         "pixel-texture.h": "c",
         "editor-gui-browser.h": "c",
-        "editor-browser.h": "c"
+        "editor-browser.h": "c",
+        "ui-docked-viewport.h": "c",
+        "ui-docked-browser.h": "c",
+        "ui-editor-main.h": "c",
+        "sokol_gp.h": "c",
+        "sokol_glue.h": "c"
     }
 }

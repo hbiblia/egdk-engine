@@ -27,7 +27,9 @@ typedef enum
 
 void pixel_resource_init(void);
 void pixel_resource_project_init(const char *path);
-const char *pixel_resource_get_path(pixel_resource_paths path);
+void prChangeCurrentContentFolder(const char *path, const char *filename);
+bool prCurrentContentFolderHasChanges(void);
+const char *prGetPath(pixel_resource_paths path);
 unsigned int pixel_resource_get_icon_id_default(pixel_resource_icons icon);
 
 #endif

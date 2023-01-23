@@ -20,7 +20,7 @@ typedef enum {
 struct _ActorNodePrivate {
     GObject parent_instance;
     GNode *node;
-    rtransform transform;
+    transform_t transform;
 };
 
 struct _ActorNodeClass {

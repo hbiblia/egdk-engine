@@ -1,5 +1,5 @@
-#ifndef RMATH_H
-#define RMATH_H
+#ifndef _PIXEL_MATH_H
+#define _PIXEL_MATH_H
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -11,20 +11,20 @@ typedef struct
     uint8_t g;
     uint8_t b;
     uint8_t a;
-} rcolor;
+} color_t;
 
 typedef struct
 {
     float x;
     float y;
-} rvect2;
+} vec2_t;
 
 typedef struct
 {
     float x;
     float y;
     float z;
-} rvect3;
+} vec3_t;
 
 typedef struct
 {
@@ -32,24 +32,23 @@ typedef struct
     float y;
     float z;
     float w;
-} rvect4;
+} vec4_t;
 
 typedef struct
 {
     float x;
     float y;
-    float w;
-    float h;
-} rrect;
+    uint16_t w;
+    uint16_t h;
+} rect_t;
 
 typedef struct
 {
-    rvect3 position;
-    rvect3 scale;
-    rvect3 rotation;
-    rvect2 pivot;
-    // bounding box
-    rvect4 box;
-} rtransform;
+    vec2_t position;
+    vec2_t scale;
+    float rotation;
+    vec2_t pivot;
+    rect_t box;
+} transform_t;
 
-#endif
+#endif // _PIXEL_MATH_H

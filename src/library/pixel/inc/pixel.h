@@ -10,11 +10,9 @@
 
 #include "pixel-math.h"
 #include "pixel-camera.h"
-#include "pixel-shape.h"
 #include "pixel-transform.h"
 #include "pixel-gfx.h"
 #include "pixel-window.h"
-#include "pixel-gui.h"
 #include "pixel-resource.h"
 #include "pixel-texture.h"
 

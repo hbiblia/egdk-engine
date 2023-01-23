@@ -5,6 +5,7 @@
 
 static char *path_resource[RESOURCE_LAST];
 static pixel_texture_t icon_default[RESOUCE_ICONS];
+static bool bpath_current_content_change = false;
 
 void pixel_resource_init(void)
 {
@@ -18,12 +19,24 @@ void pixel_resource_project_init(const char *path)
 {
     path_resource[RESOURCE_PATH_PROJECT] = PathNormalize(path);
     path_resource[RESOURCE_PATH_CONFIG] = PathBuild(path, "config", NULL);
-    path_resource[RESOURCE_PATH_ASSETS_DEFAULT] = PathBuild(path, "resource", NULL);
-    path_resource[RESOURCE_PATH_ASSETS_CURRENT] = StringDup(path_resource[RESOURCE_PATH_ASSETS_DEFAULT]);
-
+    path_resource[RESOURCE_PATH_ASSETS_DEFAULT] = PathBuild(path, "Content", NULL);
+    prChangeCurrentContentFolder(path_resource[RESOURCE_PATH_ASSETS_DEFAULT], NULL);
 }
 
-const char *pixel_resource_get_path(pixel_resource_paths path)
+void prChangeCurrentContentFolder(const char *path, const char *filename)
+{
+    bpath_current_content_change = true;
+    path_resource[RESOURCE_PATH_ASSETS_CURRENT] = PathBuild(path, filename, NULL);
+}
+
+bool prCurrentContentFolderHasChanges(void)
+{
+    bool r = bpath_current_content_change;
+    bpath_current_content_change = false;
+    return r;
+}
+
+const char *prGetPath(pixel_resource_paths path)
 {
     return path_resource[path];
 }

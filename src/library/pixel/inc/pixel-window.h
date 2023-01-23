@@ -37,6 +37,8 @@ int pixel_window_height(void);
 
 double pixel_window_delta_time(void);
 
+uint64_t pixel_window_frame_count(void);
+
 float pixel_window_dpi_scale(void);
 
 #endif

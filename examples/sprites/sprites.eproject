@@ -3,5 +3,7 @@
 	"EngineAssociation": "1.0",
 	"Category": "",
 	"Description": "",
-	"Plugins": []
+	"Plugins": [
+		{"name":"game", "source":"game.c"}
+	]
 }

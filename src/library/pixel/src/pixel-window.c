@@ -11,6 +11,7 @@
 
 #include "pixel-window.h"
 #include "pixel-resource.h"
+#include "pixel-gfx.h"
 
 // SOKOL IMPL
 #define SOKOL_IMPL
@@ -18,9 +19,8 @@
 #include "sokol/sokol_gfx.h"
 #include "sokol/sokol_app.h"
 #include "sokol/sokol_glue.h"
-#include "sokol/sokol_gl.h"
+#include "sokol/sokol_gp.h"
 
-static sg_pass_action pass; // temporal
 static pixel_window_desc *desc_main;
 
 /**
@@ -32,16 +32,9 @@ static void default_init_app(void)
 {
     sg_context_desc ctx = sapp_sgcontext();
     sg_setup(&(sg_desc){.context = ctx});
-    sgl_setup(&(sgl_desc_t){0});
+
     pixel_gui__init();
-
-    pass = (sg_pass_action){
-        .colors[0] = {
-            .action = SG_ACTION_CLEAR,
-            .value = {0.0f, 0.0f, 0.0f, 1.0f},
-        },
-    };
-
+    pGfx_Init();
     pixel_resource_init();
 
     if (desc_main->init_fn)
@@ -59,8 +52,8 @@ static void default_frame_app(void)
             desc_main->draw_fn((float)sapp_frame_duration());
         }
     }
-
-    sg_begin_default_pass(&pass, sapp_width(), sapp_height());
+    sg_pass_action pass_action = {0};
+    sg_begin_default_pass(&pass_action, sapp_width(), sapp_height());
     pixel_gui__end_frame();
     sg_end_pass();
     sg_commit();
@@ -84,6 +77,7 @@ static void default_shutdown(void)
         desc_main->shutdown_fn();
     }
 
+    pGfx_Shutdown();
     sapp_quit();
     exit(-1);
 }
@@ -129,6 +123,11 @@ int pixel_window_height(void)
 double pixel_window_delta_time(void)
 {
     return sapp_frame_duration();
+}
+
+uint64_t pixel_window_frame_count(void)
+{
+    return sapp_frame_count();
 }
 
 float pixel_window_dpi_scale(void)

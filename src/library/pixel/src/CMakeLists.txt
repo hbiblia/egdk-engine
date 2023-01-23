@@ -16,7 +16,6 @@ add_library(pixel STATIC
     pixel-gfx.c
     pixel-camera.c
     pixel-math.c
-    pixel-shape.c
     pixel-transform.c
     pixel-window.c
     pixel-gui.c

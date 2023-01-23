@@ -100,11 +100,11 @@ void FileReaddirFree(GPtrArray *readder_cache)
 {
     if (readder_cache == NULL)
         return;
-
+        
     for (int i = 0; i < readder_cache->len; i++)
     {
         FileDirFile *file = g_ptr_array_index(readder_cache, i);
-        if (file->image_id != 0)
+        if (file->type == FILE_TEXTURE)
         {
             pixel_texture_free((pixel_texture_t){.id = file->image_id});
         }

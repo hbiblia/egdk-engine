@@ -9,17 +9,18 @@
 
 #include <stdio.h>
 #include "pixel.h"
-#include "panel-tool.h"
+#include "ui-editor-main.h"
 #include "pixel-resource.h"
 
 static void init_fn()
 {
     printf("Init Pixel\n");
+    ui_editor_main_init();
 }
 
 static void draw_fn(float deltaTime)
 {
-    panel_tool_draw();
+    ui_editor_main_draw();
 }
 
 int main(int argc, char *argv[])

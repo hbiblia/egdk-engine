@@ -46,7 +46,7 @@ static void actor_node_init(ActorNode *self)
 {
     ActorNodePrivate *priv = actor_node_get_instance_private(self);
     priv->node = g_node_new(self);
-    priv->transform = new_Transform;
+    priv->transform = transform_make();
 }
 
 ActorNode *actor_node_new(void)
