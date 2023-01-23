@@ -12,10 +12,19 @@
 #include "ui-editor-main.h"
 #include "pixel-resource.h"
 
+#include "lua.h"
+#include "lauxlib.h"
+#include "lualib.h"
+
 static void init_fn()
 {
     printf("Init Pixel\n");
     ui_editor_main_init();
+
+    lua_State *l = luaL_newstate();
+    luaL_openlibs(l);
+    luaL_dostring(l, "print('Hola Mundo del Lua')");
+    lua_close(l);
 }
 
 static void draw_fn(float deltaTime)

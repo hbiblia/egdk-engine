@@ -75,6 +75,8 @@
         "ui-docked-browser.h": "c",
         "ui-editor-main.h": "c",
         "sokol_gp.h": "c",
-        "sokol_glue.h": "c"
+        "sokol_glue.h": "c",
+        "ui-docked-hierarchy.h": "c",
+        "ui-docked-inspector.h": "c"
     }
 }

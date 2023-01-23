@@ -8,6 +8,8 @@
 #include "pixel-gui.h"
 #include "ui-docked-viewport.h"
 #include "ui-docked-browser.h"
+#include "ui-docked-hierarchy.h"
+#include "ui-docked-inspector.h"
 #include "ui-editor-menubar.h"
 #include "pixel-resource.h"
 
@@ -19,6 +21,8 @@ void ui_editor_main_init(void)
 
     editor_gui_browser_init();
     editor_gui_viewport_init();
+    editor_gui_hierarchy_init();
+    editor_gui_inspector_init();
 }
 
 void ui_editor_main_draw(void)
@@ -35,6 +39,8 @@ void ui_editor_main_draw(void)
         // ----------------------
         editor_gui_browser_draw();
         editor_gui_viewport_draw();
+        editor_gui_hierarchy_draw();
+        editor_gui_inspector_draw();
     }
     igEnd();
 }
@@ -81,7 +87,11 @@ void docked_begin_content(void)
             igDockBuilderSetNodeSize(dockspace_id, viewport->Size);
 
             ImGuiID dock_id_left = igDockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, NULL, &dockspace_id);
+            ImGuiID dock_id_right = igDockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, NULL, &dockspace_id);
+            ImGuiID dock_id_left_up = igDockBuilderSplitNode(dock_id_left, ImGuiDir_Up, 0.5f, NULL, &dock_id_left);
 
+            igDockBuilderDockWindow("Scene Hierarchy", dock_id_left_up);
+            igDockBuilderDockWindow("Inspector", dock_id_right);
             igDockBuilderDockWindow("Browser", dock_id_left);
             igDockBuilderDockWindow("Viewport", dockspace_id);
         }

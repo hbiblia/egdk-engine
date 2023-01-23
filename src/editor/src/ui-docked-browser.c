@@ -15,9 +15,6 @@
 #include "path_fn.h"
 #include "pixel-resource.h"
 
-#define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
-#include "cimgui/cimgui.h"
-
 static GPtrArray *dirCurrentFolder = NULL;
 static bool test_oneload_path = false;
 
@@ -182,7 +179,7 @@ void browser_menu_context_open(FileDirFile *file)
         if (igSelectable_Bool("Copy", false, 0, (ImVec2){0, 0}))
         {
         }
-        if (igSelectable_Bool("Duplicar", false, 0, (ImVec2){0, 0}))
+        if (igSelectable_Bool("Duplicate", false, 0, (ImVec2){0, 0}))
         {
         }
 

@@ -4,6 +4,8 @@ set(source
     "src/ui-editor-main.c"
     "src/ui-editor-menubar.c"
     "src/ui-docked-viewport.c"
+    "src/ui-docked-hierarchy.c"
+    "src/ui-docked-inspector.c"
     "src/ui-docked-browser.c"
     "src/editor-browser.c"
     )
@@ -16,7 +18,7 @@ pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 add_executable(egdk-editor ${source})
 
-include_directories(utility pixel ${RENDERER_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS})
-link_directories(utility pixel ${GLIB_LIBRARY_DIRS})
+include_directories(utility pixel lua ${RENDERER_INCLUDE_DIRS} ${GLIB_INCLUDE_DIRS})
+link_directories(utility pixel lua ${GLIB_LIBRARY_DIRS})
 
-target_link_libraries(egdk-editor utility pixel ${GLIB_LIBRARIES})
+target_link_libraries(egdk-editor utility pixel lua ${GLIB_LIBRARIES})
