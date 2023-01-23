@@ -106,17 +106,19 @@ void browser_draw_content(void)
             if (file->image_id == 0)
                 continue;
 
+            const char *name_file = file->name;
+
             // filtro
-            if (strcmp(browser_d.filter, "") != 0 && !StringMatch(browser_d.filter, file->name))
+            if (strcmp(browser_d.filter, "") != 0 && !StringMatch(browser_d.filter, name_file))
                 continue;
 
-            pgBeginChildViewList(file->name);
+            pgBeginChildViewList(name_file);
             {
                 /*********
                  * ICONO *
                  *********/
                 pgStyleColor(ImGuiCol_Button, 0, 0, 0, 0.2f);
-                pgButtonImage(file->name, file->image_id, 64.0f, 64.0f);
+                pgButtonImage(name_file, file->image_id, 64.0f, 64.0f);
                 pgStyleColorClear(1);
 
                 /***************
@@ -137,7 +139,7 @@ void browser_draw_content(void)
                 /********
                  * TEXT *
                  ********/
-                pgTextWrap(file->name);
+                pgTextWrap(name_file);
             }
             pgEndChildViewList();
         }

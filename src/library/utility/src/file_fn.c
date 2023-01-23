@@ -56,8 +56,8 @@ GPtrArray *FileReaddir(const char *path)
     {
         FileDirFile *file = g_new0(FileDirFile, 1);
         file->name = FileGetName(filename);
-        file->filename = g_strdup(filename);
-        file->path = g_strdup(path);
+        file->filename = StringDup(filename);
+        file->path = StringDup(path);
         file->ext = FileGetExtension(filename);
 
         if (g_file_test(PathBuild(file->path, filename, NULL), G_FILE_TEST_IS_DIR))
@@ -108,6 +108,9 @@ void FileReaddirFree(GPtrArray *readder_cache)
         {
             pixel_texture_free((pixel_texture_t){.id = file->image_id});
         }
+        g_free(file->name);
+        g_free(file->filename);
+        g_free(file->path);
         g_free(file);
     }
     g_ptr_array_free(readder_cache, TRUE);

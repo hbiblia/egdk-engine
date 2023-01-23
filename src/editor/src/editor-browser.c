@@ -44,10 +44,11 @@ void browser_home_path(void)
 
 void browser_move_back_path(void)
 {
-    const char *path_current_new = g_dirname(prGetPath(RESOURCE_PATH_ASSETS_CURRENT));
+    const char *path_current_new = prGetPath(RESOURCE_PATH_ASSETS_CURRENT);
     const char *default_path = prGetPath(RESOURCE_PATH_ASSETS_DEFAULT);
-    if (strcmp(path_current_new, default_path) != 0)
+
+    if (strcmp(path_current_new, default_path) == 0)
         return;
 
-    prChangeCurrentContentFolder(path_current_new, NULL);
+    prChangeCurrentContentFolder(g_dirname(path_current_new), NULL);
 }
