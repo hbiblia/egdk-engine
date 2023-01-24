@@ -8,9 +8,8 @@
  */
 
 #include <stdio.h>
-#include "pixel.h"
+#include "pixel/pixel.h"
 #include "ui-editor-main.h"
-#include "pixel-resource.h"
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -34,8 +33,10 @@ static void draw_fn(float deltaTime)
 
 int main(int argc, char *argv[])
 {
-    pixel_window_main(&(pixel_window_desc){
+    pWindow_Main(&(pixel_window_desc){
         .title = "EGDKEditor - v0.0.1",
+        .width = 1280,
+        .height = 720,
         .init_fn = init_fn,
         .draw_fn = draw_fn,
     });

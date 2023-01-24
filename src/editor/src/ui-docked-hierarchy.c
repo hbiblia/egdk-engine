@@ -1,5 +1,5 @@
 #include "ui-docked-hierarchy.h"
-#include "pixel-gui.h"
+#include "pixel/pixel.h"
 #include "flecs/flecs.h"
 
 static void hierarchy_menu_context_open(const char *name, ecs_entity_t e);

@@ -23,7 +23,7 @@
         "rlgl.h": "c",
         "pixel-math.h": "c",
         "pixel-shape.h": "c",
-        "pixel.h": "c",
+        "pixel/pixel.h": "c",
         "pixel-transform.h": "c",
         "pixel-camera.h": "c",
         "gtk-viewport-embed.h": "c",
@@ -77,6 +77,7 @@
         "sokol_gp.h": "c",
         "sokol_glue.h": "c",
         "ui-docked-hierarchy.h": "c",
-        "ui-docked-inspector.h": "c"
+        "ui-docked-inspector.h": "c",
+        "stdbool.h": "c"
     }
 }

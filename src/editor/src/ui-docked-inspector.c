@@ -1,5 +1,5 @@
 #include "ui-docked-inspector.h"
-#include "pixel-gui.h"
+#include "pixel/pixel.h"
 
 void editor_gui_inspector_init(void)
 {

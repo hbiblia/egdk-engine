@@ -1,5 +1,5 @@
 #include "file_fn.h"
-#include "pixel-texture.h"
+#include "pixel/pixel.h"
 #include "path_fn.h"
 #include "string_fn.h"
 
@@ -106,11 +106,11 @@ void FileReaddirFree(GPtrArray *readder_cache)
         FileDirFile *file = g_ptr_array_index(readder_cache, i);
         if (file->type == FILE_TEXTURE)
         {
-            pixel_texture_free((pixel_texture_t){.id = file->image_id});
+            pTexture_Free((pixel_texture_t){.id = file->image_id});
         }
-        g_free(file->name);
-        g_free(file->filename);
-        g_free(file->path);
+        // g_free(file->name);
+        // g_free(file->filename);
+        // g_free(file->path);
         g_free(file);
     }
     g_ptr_array_free(readder_cache, TRUE);

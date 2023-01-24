@@ -8,12 +8,10 @@
 #include "editor-browser.h"
 #include <glib.h>
 
-#include "pixel.h"
-#include "pixel-gui.h"
+#include "pixel/pixel.h"
 #include "file_fn.h"
 #include "string_fn.h"
 #include "path_fn.h"
-#include "pixel-resource.h"
 
 static GPtrArray *dirCurrentFolder = NULL;
 static bool test_oneload_path = false;
@@ -50,13 +48,13 @@ void editor_gui_browser_draw(void)
 void browser_draw_content(void)
 {
     /**
-     * prCurrentContentFolderHasChanges identifica cuando se cambia de
+     * pResource_CurrentContentFolderHasChanges identifica cuando se cambia de
      * folder y actualiza la lista de contenido.
      */
-    if (prCurrentContentFolderHasChanges())
+    if (pResource_CurrentContentFolderHasChanges())
     {
         FileReaddirFree(dirCurrentFolder);
-        dirCurrentFolder = browser_list_dir_content(prGetPath(RESOURCE_PATH_ASSETS_CURRENT));
+        dirCurrentFolder = browser_list_dir_content(pResource_GetPath(RESOURCE_PATH_ASSETS_CURRENT));
     }
 
     /***********
@@ -151,7 +149,7 @@ void browser_double_click_open(FileDirFile *file)
         switch (file->type)
         {
         case FILE_FOLDER:
-            prChangeCurrentContentFolder(file->path, file->filename);
+            pResource_ChangeCurrentContentFolder(file->path, file->filename);
             break;
         }
     }
