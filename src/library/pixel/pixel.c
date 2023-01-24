@@ -1,5 +1,7 @@
 #include "pixel.h"
 
+#include "pixel-ecs.h"
+
 #include "path_fn.h"
 #include "string_fn.h"
 #include "file_fn.h"
@@ -67,6 +69,7 @@ static void pApp_Init(void)
     simgui_setup(&(simgui_desc_t){0});
     pGfx_Init();
     pResource_Init();
+    pEcs_Init();
 
     ImGuiIO *io = igGetIO();
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;   // Enable Docking
@@ -95,6 +98,8 @@ static void pApp_Frame(void)
 
     if (pixel.Window.draw_fn)
         pixel.Window.draw_fn((float)pWindow_DeltaTime());
+
+    pEcs_Progress();
 
     sg_pass_action pass_action = {0};
     sg_begin_default_pass(&pass_action, pWindow_GetWidth(), pWindow_GetHeight());

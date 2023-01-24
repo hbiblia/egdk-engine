@@ -78,6 +78,9 @@
         "sokol_glue.h": "c",
         "ui-docked-hierarchy.h": "c",
         "ui-docked-inspector.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "pixel-ecs.h": "c",
+        "pixel.h": "c",
+        "optional": "c"
     }
 }

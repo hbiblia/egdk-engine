@@ -12,7 +12,8 @@ link_directories(${GLIB_LIBRARY_DIRS})
 
 add_library(pixel STATIC 
     pixel.c
+    pixel-ecs.c
     )
     
-target_link_libraries(pixel cimgui utility ${link_deps} ${GLIB_LIBRARIES})
+target_link_libraries(pixel flecs cimgui utility ${link_deps} ${GLIB_LIBRARIES})
 target_compile_options(pixel PRIVATE -w -Wall -Wpedantic)
