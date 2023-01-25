@@ -7,14 +7,14 @@
 // Componentes globales
 typedef struct
 {
+    bool enable;
     char *name;
-    int64_t id;
-} ComponentInfo;
+    vec2_t position;
+    vec2_t scale;
+    float rotation;
+    vec2_t pivot;
+} ComponentEntityBase;
 
-typedef struct
-{
-    transform_t transform;
-} ComponentSceneTransform;
 
 // func
 void pEcs_Init(void);
@@ -33,6 +33,7 @@ ecs_entity_t pEcs_EntityClone(ecs_entity_t entity);
 void pEcs_EntityDelete(ecs_entity_t entity);
 
 void pEcs_EntitySetParent(ecs_entity_t parent, ecs_entity_t entity);
+void pEcs_EntitySetParentUnSafe(ecs_entity_t parent, ecs_entity_t entity);
 ecs_entity_t pEcs_EntityGetParent(ecs_entity_t entity);
 bool pEcs_EntityHasDisabled(ecs_entity_t entity);
 bool pEcs_EntityIsValid(ecs_entity_t entity);

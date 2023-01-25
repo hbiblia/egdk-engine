@@ -24,15 +24,13 @@ static struct PixelEcs
  *
  */
 
-ECS_COMPONENT_DECLARE(ComponentSceneTransform);
-ECS_COMPONENT_DECLARE(ComponentInfo);
+ECS_COMPONENT_DECLARE(ComponentEntityBase);
 
 void pEcs_Init(void)
 {
     pixel.world = ecs_init();
 
-    ECS_COMPONENT_DEFINE(pixel.world, ComponentSceneTransform);
-    ECS_COMPONENT_DEFINE(pixel.world, ComponentInfo);
+    ECS_COMPONENT_DEFINE(pixel.world, ComponentEntityBase);
 
     // Unico Root en la escena
     pixel.root = pEcs_EntityNew();
@@ -85,9 +83,7 @@ bool pEcs_QueryIterNext(ecs_iter_t *it)
 ecs_entity_t pEcs_EntityNew(void)
 {
     ecs_entity_t e = pEcs_EntityEmptyNew();
-    // ecs_set_name(pixel.world, e, StringPrintf("Entity%u",e));
-    ecs_set(pixel.world, e, ComponentInfo, {.name = String("New Entity")});
-    ecs_set(pixel.world, e, ComponentSceneTransform, {.transform = {.scale = {1, 1}, .rotation = 0, .position = {0, 0}}});
+    ecs_set(pixel.world, e, ComponentEntityBase, {.enable = true, .name = String("New Entity"), .scale = {1, 1}, .rotation = 0, .position = {0, 0}});
 
     return e;
 }
@@ -101,14 +97,19 @@ ecs_entity_t pEcs_EntityClone(ecs_entity_t entity)
 {
     ecs_entity_t clone = ecs_clone(pixel.world, 0, entity, true);
 
-    // Verificamos si es padre para copiar los hijos
+    // ---------------------------------
+    // Copiamos los hijos si tiene
+    // ---------------------------------
     ecs_iter_t it = pEcs_EntityGetChildren(entity);
     while (pEcs_EntityChildrenNext(&it))
     {
         for (int i = 0; i < it.count; i++)
         {
-            ecs_entity_t child_clone = pEcs_EntityClone(it.entities[i]);
-            pEcs_EntitySetParent(clone, child_clone);
+            if(ecs_is_alive(pixel.world, it.entities[i]))
+            {
+                ecs_entity_t child_clone = pEcs_EntityClone(it.entities[i]);
+                ecs_add_pair(pixel.world, child_clone, EcsChildOf, clone);
+            }
         }
     }
 
@@ -155,6 +156,11 @@ static bool pEcs_EntityHasParentTree(ecs_entity_t entity, ecs_entity_t parent)
     return false;
 }
 
+void pEcs_EntitySetParentUnSafe(ecs_entity_t parent, ecs_entity_t entity)
+{
+    ecs_add_pair(pixel.world, entity, EcsChildOf, parent);
+}
+
 void pEcs_EntitySetParent(ecs_entity_t parent, ecs_entity_t entity)
 {
     if (!pEcs_EntityHasParentTree(entity, parent))
@@ -197,13 +203,13 @@ bool pEcs_EntityChildrenNext(ecs_iter_t *it)
 // sin nombres y guardamos esos datos en un componente.
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name)
 {
-    ComponentInfo *info = ecs_get(pixel.world, entity, ComponentInfo);
+    ComponentEntityBase *info = ecs_get(pixel.world, entity, ComponentEntityBase);
     info->name = String(name);
 }
 
 const char *pEcs_EntityGetName(ecs_entity_t entity)
 {
-    ComponentInfo *info = ecs_get(pixel.world, entity, ComponentInfo);
+    ComponentEntityBase *info = ecs_get(pixel.world, entity, ComponentEntityBase);
     return String(info->name);
 }
 

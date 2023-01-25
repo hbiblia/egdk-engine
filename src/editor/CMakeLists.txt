@@ -1,6 +1,7 @@
 # Codigo fuente del editor
 set(source 
     "src/egdk-editor.c"
+    "src/single-file.c"
     "src/ui-editor-main.c"
     "src/ui-editor-menubar.c"
     "src/ui-docked-viewport.c"
