@@ -38,6 +38,9 @@ bool pEcs_EntityHasDisabled(ecs_entity_t entity);
 bool pEcs_EntityIsValid(ecs_entity_t entity);
 bool pEcs_EntityIsParent(ecs_entity_t entity);
 
+ecs_iter_t pEcs_EntityGetChildren(ecs_entity_t entity);
+bool pEcs_EntityChildrenNext(ecs_iter_t *it);
+
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name);
 const char *pEcs_EntityGetName(ecs_entity_t entity);
 

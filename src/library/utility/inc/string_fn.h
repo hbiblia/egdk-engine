@@ -10,10 +10,10 @@
 char *StringReplace(const char *str, const char *find, const char *replace);
 
 /*
- * Name: StringDup
+ * Name: String
  * Desc: Duplica un string
  */
-char *StringDup(const char *str);
+char *String(const char *str);
 
 /*
  * Name: StringPrintf

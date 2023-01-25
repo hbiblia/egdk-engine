@@ -18,13 +18,13 @@ char *StringReplace(const char *str, const char *find, const char *replace)
 }
 
 /*
- * Name: StringDup
+ * Name: String
  * Public
  * Params: (const char *str)
  * Return: char *
  * Desc: Duplica un string
  */
-char *StringDup(const char *str)
+char *String(const char *str)
 {
     return g_strdup(str);
 }

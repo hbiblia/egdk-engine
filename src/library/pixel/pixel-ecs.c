@@ -85,8 +85,9 @@ bool pEcs_QueryIterNext(ecs_iter_t *it)
 ecs_entity_t pEcs_EntityNew(void)
 {
     ecs_entity_t e = pEcs_EntityEmptyNew();
-    ecs_set(pixel.world, e, ComponentInfo, {.name = StringPrintf("Entity%u", e)});
-    ecs_set(pixel.world, e, ComponentSceneTransform, {.transform = {0}});
+    // ecs_set_name(pixel.world, e, StringPrintf("Entity%u",e));
+    ecs_set(pixel.world, e, ComponentInfo, {.name = String("New Entity")});
+    ecs_set(pixel.world, e, ComponentSceneTransform, {.transform = {.scale = {1, 1}, .rotation = 0, .position = {0, 0}}});
 
     return e;
 }
@@ -99,29 +100,16 @@ ecs_entity_t pEcs_EntityEmptyNew(void)
 ecs_entity_t pEcs_EntityClone(ecs_entity_t entity)
 {
     ecs_entity_t clone = ecs_clone(pixel.world, 0, entity, true);
-    pEcs_EntitySetName(clone, StringPrintf("Entity%u_%u+", entity, clone));
 
     // Verificamos si es padre para copiar los hijos
-    if (pEcs_EntityIsParent(entity))
+    ecs_iter_t it = pEcs_EntityGetChildren(entity);
+    while (pEcs_EntityChildrenNext(&it))
     {
-        ecs_query_t *query = pEcs_Query(&(ecs_query_desc_t){
-            .filter.terms = {
-                {.id = ecs_id(ComponentSceneTransform), .inout = EcsIn},
-                {.id = pEcs_EntityGetParent(entity)},
-                {.id = EcsDisabled, .oper = EcsOptional},
-            },
-        });
-
-        ecs_iter_t it = pEcs_QueryIter(query);
-        while (pEcs_QueryIterNext(&it))
+        for (int i = 0; i < it.count; i++)
         {
-            for (int i = 0; i < it.count; i++)
-            {
-                ecs_entity_t child_clone = pEcs_EntityClone(it.entities[i]);
-                pEcs_EntitySetParent(clone, child_clone);
-            }
+            ecs_entity_t child_clone = pEcs_EntityClone(it.entities[i]);
+            pEcs_EntitySetParent(clone, child_clone);
         }
-        pEcs_QueryFree(query);
     }
 
     return clone;
@@ -144,9 +132,33 @@ ecs_entity_t pEcs_EntityRoot(void)
     return pixel.root;
 }
 
+static bool pEcs_EntityHasParentTree(ecs_entity_t entity, ecs_entity_t parent)
+{
+    ecs_iter_t it = pEcs_EntityGetChildren(entity);
+    while (pEcs_EntityChildrenNext(&it))
+    {
+        for (int i = 0; i < it.count; i++)
+        {
+            if (it.entities[i] == parent)
+            {
+                return true;
+            }
+            else
+            {
+                if (pEcs_EntityIsParent(it.entities[i]))
+                {
+                    return pEcs_EntityHasParentTree(it.entities[i], parent);
+                }
+            }
+        }
+    }
+    return false;
+}
+
 void pEcs_EntitySetParent(ecs_entity_t parent, ecs_entity_t entity)
 {
-    ecs_add_pair(pixel.world, entity, EcsChildOf, parent);
+    if (!pEcs_EntityHasParentTree(entity, parent))
+        ecs_add_pair(pixel.world, entity, EcsChildOf, parent);
 }
 
 ecs_entity_t pEcs_EntityGetParent(ecs_entity_t entity)
@@ -166,7 +178,17 @@ bool pEcs_EntityIsValid(ecs_entity_t entity)
 
 bool pEcs_EntityIsParent(ecs_entity_t entity)
 {
-    return ecs_count_id(pixel.world, ecs_pair(EcsChildOf, entity)) > 0 ? true : false;
+    return (ecs_count_id(pixel.world, ecs_pair(EcsChildOf, entity)) > 0);
+}
+
+ecs_iter_t pEcs_EntityGetChildren(ecs_entity_t entity)
+{
+    return ecs_children(pixel.world, entity);
+}
+
+bool pEcs_EntityChildrenNext(ecs_iter_t *it)
+{
+    return ecs_children_next(it);
 }
 
 // Las entidades tienen nombres unicos, no existe una entidad
@@ -176,13 +198,13 @@ bool pEcs_EntityIsParent(ecs_entity_t entity)
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name)
 {
     ComponentInfo *info = ecs_get(pixel.world, entity, ComponentInfo);
-    info->name = StringDup(name);
+    info->name = String(name);
 }
 
 const char *pEcs_EntityGetName(ecs_entity_t entity)
 {
     ComponentInfo *info = ecs_get(pixel.world, entity, ComponentInfo);
-    return StringDup(info->name);
+    return String(info->name);
 }
 
 /***

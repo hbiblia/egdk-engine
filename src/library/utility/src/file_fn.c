@@ -32,7 +32,7 @@ const char *FileGetName(const char *filename)
     char **value = StringSplit(filename, ".");
     const char *result = value[0];
     StringSplitFree(value);
-    return StringDup(result);
+    return String(result);
 }
 
 /*
@@ -56,8 +56,8 @@ GPtrArray *FileReaddir(const char *path)
     {
         FileDirFile *file = g_new0(FileDirFile, 1);
         file->name = FileGetName(filename);
-        file->filename = StringDup(filename);
-        file->path = StringDup(path);
+        file->filename = String(filename);
+        file->path = String(path);
         file->ext = FileGetExtension(filename);
 
         if (g_file_test(PathBuild(file->path, filename, NULL), G_FILE_TEST_IS_DIR))
