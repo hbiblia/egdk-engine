@@ -20,6 +20,8 @@ typedef struct
 void pEcs_Init(void);
 void pEcs_Progress(void);
 
+ecs_world_t *pEcs_World(void);
+
 ecs_entity_t pEcs_EntityLookupByName(const char *id_name);
 ecs_query_t *pEcs_Query(const ecs_query_desc_t *query);
 void pEcs_QueryFree(ecs_query_t *query_t);
@@ -38,6 +40,7 @@ ecs_entity_t pEcs_EntityGetParent(ecs_entity_t entity);
 bool pEcs_EntityHasDisabled(ecs_entity_t entity);
 bool pEcs_EntityIsValid(ecs_entity_t entity);
 bool pEcs_EntityIsParent(ecs_entity_t entity);
+const ecs_type_t *pEcs_EntityGetType(ecs_entity_t entity);
 
 ecs_iter_t pEcs_EntityGetChildren(ecs_entity_t entity);
 bool pEcs_EntityChildrenNext(ecs_iter_t *it);

@@ -81,6 +81,7 @@
         "stdbool.h": "c",
         "pixel-ecs.h": "c",
         "pixel.h": "c",
-        "optional": "c"
+        "optional": "c",
+        "single-file.h": "c"
     }
 }

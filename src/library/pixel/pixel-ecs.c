@@ -43,6 +43,11 @@ void pEcs_Progress(void)
     ecs_progress(pixel.world, 0);
 }
 
+ecs_world_t *pEcs_World(void)
+{
+    return pixel.world;
+}
+
 /***
  *
  *  PixelQuery
@@ -105,7 +110,7 @@ ecs_entity_t pEcs_EntityClone(ecs_entity_t entity)
     {
         for (int i = 0; i < it.count; i++)
         {
-            if(ecs_is_alive(pixel.world, it.entities[i]))
+            if (ecs_is_alive(pixel.world, it.entities[i]))
             {
                 ecs_entity_t child_clone = pEcs_EntityClone(it.entities[i]);
                 ecs_add_pair(pixel.world, child_clone, EcsChildOf, clone);
@@ -187,6 +192,11 @@ bool pEcs_EntityIsParent(ecs_entity_t entity)
     return (ecs_count_id(pixel.world, ecs_pair(EcsChildOf, entity)) > 0);
 }
 
+const ecs_type_t *pEcs_EntityGetType(ecs_entity_t entity)
+{
+    return ecs_get_type(pixel.world, entity);
+}
+
 ecs_iter_t pEcs_EntityGetChildren(ecs_entity_t entity)
 {
     return ecs_children(pixel.world, entity);
@@ -222,12 +232,6 @@ const char *pEcs_EntityGetName(ecs_entity_t entity)
 ecs_entity_t pEcs_ComponentInit(ecs_entity_t entity_component)
 {
     ecs_entity_t component;
-
-    component = ecs_component_init(pixel.world,
-                                   &(ecs_component_desc_t){
-                                       .entity = entity_component,
-                                   });
-
     return component;
 }
 
