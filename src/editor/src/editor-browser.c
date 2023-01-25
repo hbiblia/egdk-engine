@@ -24,7 +24,7 @@ GPtrArray *browser_list_dir_content(const char *path)
         FileDirFile *file = g_ptr_array_index(dirCurrentFolder, i);
         if (file->type == FILE_TEXTURE)
         {
-            pixel_texture_t t = pTexture_LoadFile(PathBuild(file->path, file->filename, NULL));
+            texture_t t = pTexture_LoadFile(PathBuild(file->path, file->filename, NULL));
             file->image_id = t.id;
         }
         else if (file->type == FILE_FOLDER)

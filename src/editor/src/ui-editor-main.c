@@ -85,7 +85,7 @@ void docked_begin_content(void)
             igDockBuilderSetNodeSize(dockspace_id, viewport->Size);
 
             ImGuiID dock_id_left = igDockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, NULL, &dockspace_id);
-            ImGuiID dock_id_right = igDockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.2f, NULL, &dockspace_id);
+            ImGuiID dock_id_right = igDockBuilderSplitNode(dockspace_id, ImGuiDir_Right, 0.3f, NULL, &dockspace_id);
             ImGuiID dock_id_left_up = igDockBuilderSplitNode(dock_id_left, ImGuiDir_Up, 0.5f, NULL, &dock_id_left);
 
             igDockBuilderDockWindow("Scene Hierarchy", dock_id_left_up);

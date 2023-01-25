@@ -3,18 +3,7 @@
 #include <stdio.h>
 #include "pixel/pixel.h"
 #include "flecs/flecs.h"
-
-// Componentes globales
-typedef struct
-{
-    bool enable;
-    char *name;
-    vec2_t position;
-    vec2_t scale;
-    float rotation;
-    vec2_t pivot;
-} ComponentEntityBase;
-
+#include "pixel-component.h"
 
 // func
 void pEcs_Init(void);

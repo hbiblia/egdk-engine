@@ -13,6 +13,7 @@ link_directories(${GLIB_LIBRARY_DIRS})
 add_library(pixel STATIC 
     pixel.c
     pixel-ecs.c
+    pixel-component.c
     )
     
 target_link_libraries(pixel flecs cimgui utility ${link_deps} ${GLIB_LIBRARIES})

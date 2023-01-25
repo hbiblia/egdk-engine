@@ -82,6 +82,8 @@
         "pixel-ecs.h": "c",
         "pixel.h": "c",
         "optional": "c",
-        "single-file.h": "c"
+        "single-file.h": "c",
+        "flecs.h": "c",
+        "pixel-component.h": "c"
     }
 }

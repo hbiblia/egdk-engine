@@ -106,7 +106,7 @@ void FileReaddirFree(GPtrArray *readder_cache)
         FileDirFile *file = g_ptr_array_index(readder_cache, i);
         if (file->type == FILE_TEXTURE)
         {
-            pTexture_Free((pixel_texture_t){.id = file->image_id});
+            pTexture_Free((texture_t){.id = file->image_id});
         }
         // g_free(file->name);
         // g_free(file->filename);

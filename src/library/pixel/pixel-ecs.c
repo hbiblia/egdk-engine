@@ -11,6 +11,7 @@
 
 #include "pixel-ecs.h"
 #include "string_fn.h"
+#include "pixel-component.h"
 
 static struct PixelEcs
 {
@@ -24,13 +25,15 @@ static struct PixelEcs
  *
  */
 
-ECS_COMPONENT_DECLARE(ComponentEntityBase);
+pEcsComponent_Declare();
 
 void pEcs_Init(void)
 {
     pixel.world = ecs_init();
 
-    ECS_COMPONENT_DEFINE(pixel.world, ComponentEntityBase);
+    pEcsComponent_Init(pixel.world);
+
+    pEcsComponent_Define();
 
     // Unico Root en la escena
     pixel.root = pEcs_EntityNew();
@@ -88,7 +91,7 @@ bool pEcs_QueryIterNext(ecs_iter_t *it)
 ecs_entity_t pEcs_EntityNew(void)
 {
     ecs_entity_t e = pEcs_EntityEmptyNew();
-    ecs_set(pixel.world, e, ComponentEntityBase, {.enable = true, .name = String("New Entity"), .scale = {1, 1}, .rotation = 0, .position = {0, 0}});
+    ecs_set(pixel.world, e, ComponentEntity, {.enable = true, .name = String("New Entity"), .scale = {1, 1}, .rotation = 0, .position = {0, 0}});
 
     return e;
 }
@@ -213,13 +216,13 @@ bool pEcs_EntityChildrenNext(ecs_iter_t *it)
 // sin nombres y guardamos esos datos en un componente.
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name)
 {
-    ComponentEntityBase *info = ecs_get(pixel.world, entity, ComponentEntityBase);
+    ComponentEntity *info = ecs_get(pixel.world, entity, ComponentEntity);
     info->name = String(name);
 }
 
 const char *pEcs_EntityGetName(ecs_entity_t entity)
 {
-    ComponentEntityBase *info = ecs_get(pixel.world, entity, ComponentEntityBase);
+    ComponentEntity *info = ecs_get(pixel.world, entity, ComponentEntity);
     return String(info->name);
 }
 

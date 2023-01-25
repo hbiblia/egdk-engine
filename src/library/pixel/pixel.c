@@ -48,7 +48,7 @@ struct PixelBase
         struct
         {
             char *pathr[RESOURCE_LAST];
-            pixel_texture_t icons[RESOUCE_ICONS];
+            texture_t icons[RESOUCE_ICONS];
             bool bpathCurrentChange;
         } Resource;
     } Window;
@@ -287,9 +287,9 @@ void pTransform_End()
  *
  */
 
-pixel_texture_t pTexture_LoadFile(const char *filename)
+texture_t pTexture_LoadFile(const char *filename)
 {
-    pixel_texture_t texture = {0};
+    texture_t texture = {0};
 
     int comp;
     stbi_uc *data = stbi_load(filename, &texture.width, &texture.height, &comp, STBI_rgb_alpha);
@@ -312,7 +312,7 @@ pixel_texture_t pTexture_LoadFile(const char *filename)
     return texture;
 }
 
-void pTexture_Free(pixel_texture_t texture)
+void pTexture_Free(texture_t texture)
 {
     sg_image d = (sg_image){.id = texture.id};
     sg_destroy_image(d);

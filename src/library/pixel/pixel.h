@@ -3,60 +3,10 @@
 #ifndef _PIXEL_H
 #define _PIXEL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-
+#include "pixel-struct.h"
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui/cimgui.h"
 
-typedef struct
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-} color_t;
-
-typedef struct
-{
-    float x;
-    float y;
-} vec2_t;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} vec3_t;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-    float w;
-} vec4_t;
-
-typedef struct
-{
-    float x;
-    float y;
-    uint16_t w;
-    uint16_t h;
-} rect_t;
-
-typedef struct
-{
-    vec2_t position;
-    vec2_t scale;
-    float rotation;
-    vec2_t pivot;
-    rect_t box;
-} transform_t;
 
 typedef struct pixel_event_t
 {
@@ -74,13 +24,6 @@ typedef struct pixel_window_desc
     int width;
     int height;
 } pixel_window_desc;
-
-typedef struct pixel_texture_t
-{
-    unsigned int id;
-    int width;
-    int height;
-} pixel_texture_t;
 
 typedef enum
 {
@@ -190,8 +133,8 @@ void pTransform_End(void);
  *
  */
 
-pixel_texture_t pTexture_LoadFile(const char *filename);
-void pTexture_Free(pixel_texture_t texture);
+texture_t pTexture_LoadFile(const char *filename);
+void pTexture_Free(texture_t texture);
 
 /***
  *
