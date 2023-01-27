@@ -7,20 +7,6 @@
 #include <stdbool.h>
 #include <math.h>
 
-typedef enum
-{
-    Simple,
-    Animated
-} ComponentSpriteTypeEnum;
-
-typedef struct
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-} color_t;
-
 typedef struct
 {
     float x;
@@ -29,18 +15,11 @@ typedef struct
 
 typedef struct
 {
-    float x;
-    float y;
-    float z;
-} vec3_t;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-    float w;
-} vec4_t;
+    float r;
+    float g;
+    float b;
+    float a;
+} color_t;
 
 typedef struct
 {
@@ -49,6 +28,13 @@ typedef struct
     uint16_t w;
     uint16_t h;
 } rect_t;
+
+typedef struct
+{
+    unsigned int id;
+    int width;
+    int height;
+} texture_t;
 
 typedef struct
 {
@@ -61,10 +47,12 @@ typedef struct
 
 typedef struct
 {
-    unsigned int id;
-    int width;
-    int height;
-} texture_t;
+    texture_t texture;
+    color_t color;
+    float opacity;
+    bool flipX;
+    bool flipY;
+} sprite_t;
 
 typedef struct
 {
@@ -73,17 +61,6 @@ typedef struct
     vec2_t position;
     vec2_t scale;
     float rotation;
-    vec2_t pivot;
-} ComponentEntity;
-
-typedef struct
-{
-    ComponentSpriteTypeEnum type;
-    texture_t texture;
-    int frame;
-    float opacity;
-    bool flipX;
-    bool flipY;
-} ComponentSprite;
+} entity_info_t;
 
 #endif // PIXEL_STRUCT_H

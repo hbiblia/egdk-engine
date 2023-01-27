@@ -1,6 +1,6 @@
 #include <glib.h>
-#include "path_fn.h"
-#include "string_fn.h"
+#include "utility/path_fn.h"
+#include "utility/string_fn.h"
 
 /*
  * Name: PathNormalize

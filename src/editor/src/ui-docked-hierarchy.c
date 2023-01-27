@@ -32,7 +32,7 @@ static void hierarchy_entity_add(void);
 
 void editor_gui_hierarchy_init(void)
 {
-    hierarchy.component.scene_transform = pEcs_EntityLookupByName("ComponentSceneTransform");
+    hierarchy.component.scene_transform = pEcs_LookupByName("ComponentSceneTransform");
 
     // -------------------------------------------
     // Single-File: Comparte dantos unicos entre modulos

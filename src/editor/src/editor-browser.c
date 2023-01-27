@@ -1,6 +1,6 @@
 #include "editor-browser.h"
-#include "file_fn.h"
-#include "path_fn.h"
+#include "utility/file_fn.h"
+#include "utility/path_fn.h"
 #include "pixel/pixel.h"
 #include <glib.h>
 

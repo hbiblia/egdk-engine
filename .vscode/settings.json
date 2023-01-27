@@ -84,6 +84,15 @@
         "optional": "c",
         "single-file.h": "c",
         "flecs.h": "c",
-        "pixel-component.h": "c"
+        "pixel-component.h": "c",
+        "sprite.h": "c",
+        "color.h": "c",
+        "vec2.h": "c",
+        "rect.h": "c",
+        "texture.h": "c",
+        "entity.h": "c",
+        "pixel-struct.h": "c",
+        "pixel-meta-struct.h": "c",
+        "pixel-components.h": "c"
     }
 }

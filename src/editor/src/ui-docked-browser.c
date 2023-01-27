@@ -9,9 +9,9 @@
 #include <glib.h>
 
 #include "pixel/pixel.h"
-#include "file_fn.h"
-#include "string_fn.h"
-#include "path_fn.h"
+#include "utility/file_fn.h"
+#include "utility/string_fn.h"
+#include "utility/path_fn.h"
 
 static GPtrArray *dirCurrentFolder = NULL;
 static bool test_oneload_path = false;
@@ -196,7 +196,7 @@ void browser_drag_and_drop(FileDirFile *file)
 {
     if (igBeginDragDropSource(0))
     {
-        igSetDragDropPayload("browser_file_drag", file, sizeof(file), 0);
+        igSetDragDropPayload("browser_file_drag", file, sizeof(FileDirFile), 0);
         igEndDragDropSource();
     }
 

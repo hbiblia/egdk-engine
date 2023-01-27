@@ -47,6 +47,7 @@ void viewport_viewport_render(const ImDrawList *dl, const ImDrawCmd *cmd)
         pGfx_ClearColor(BLACK);
 
         pGfx_DrawCheckboard(32, 32, cw + 200, ch + 200);
+        pEcs_Progress();
 
         // transform_begin_make((transform_t){
         //     .position = {100.0f, 100.0f},

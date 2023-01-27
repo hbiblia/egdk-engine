@@ -10,8 +10,8 @@
  */
 
 #include "pixel-ecs.h"
-#include "string_fn.h"
-#include "pixel-component.h"
+#include "pixel/pixel-components.h"
+#include "utility/string_fn.h"
 
 static struct PixelEcs
 {
@@ -25,15 +25,12 @@ static struct PixelEcs
  *
  */
 
-pEcsComponent_Declare();
-
 void pEcs_Init(void)
 {
     pixel.world = ecs_init();
 
-    pEcsComponent_Init(pixel.world);
-
-    pEcsComponent_Define();
+    pEscMetaStruct_Init(pixel.world);
+    pEcsComponent_Init();
 
     // Unico Root en la escena
     pixel.root = pEcs_EntityNew();
@@ -43,7 +40,7 @@ void pEcs_Init(void)
 
 void pEcs_Progress(void)
 {
-    ecs_progress(pixel.world, 0);
+    ecs_progress(pixel.world, pWindow_DeltaTime());
 }
 
 ecs_world_t *pEcs_World(void)
@@ -57,7 +54,7 @@ ecs_world_t *pEcs_World(void)
  *
  */
 
-ecs_entity_t pEcs_EntityLookupByName(const char *id_name)
+ecs_entity_t pEcs_LookupByName(const char *id_name)
 {
     return ecs_lookup(pixel.world, id_name);
 }
@@ -91,7 +88,11 @@ bool pEcs_QueryIterNext(ecs_iter_t *it)
 ecs_entity_t pEcs_EntityNew(void)
 {
     ecs_entity_t e = pEcs_EntityEmptyNew();
-    ecs_set(pixel.world, e, ComponentEntity, {.enable = true, .name = String("New Entity"), .scale = {1, 1}, .rotation = 0, .position = {0, 0}});
+
+    pEcs_EntitySet(e, entity_info_t, {
+            .enable = true, .name = String("New Entity"),
+            .scale = {1, 1}, .rotation = 0, .position = {0, 0},
+    });
 
     return e;
 }
@@ -130,10 +131,6 @@ void pEcs_EntityDelete(ecs_entity_t entity)
     {
         ecs_delete(pixel.world, entity);
     }
-}
-
-void pEcs_Set(ecs_entity_t entity)
-{
 }
 
 ecs_entity_t pEcs_EntityRoot(void)
@@ -216,13 +213,13 @@ bool pEcs_EntityChildrenNext(ecs_iter_t *it)
 // sin nombres y guardamos esos datos en un componente.
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name)
 {
-    ComponentEntity *info = ecs_get(pixel.world, entity, ComponentEntity);
+    entity_info_t *info = pEcs_EntityGet(entity, entity_info_t);
     info->name = String(name);
 }
 
 const char *pEcs_EntityGetName(ecs_entity_t entity)
 {
-    ComponentEntity *info = ecs_get(pixel.world, entity, ComponentEntity);
+    entity_info_t *info = pEcs_EntityGet(entity, entity_info_t);
     return String(info->name);
 }
 
@@ -232,13 +229,12 @@ const char *pEcs_EntityGetName(ecs_entity_t entity)
  *
  */
 
-ecs_entity_t pEcs_ComponentInit(ecs_entity_t entity_component)
-{
-    ecs_entity_t component;
-    return component;
-}
-
 const void *pEcs_ComponentGetByName(ecs_entity_t entity, const char *component)
 {
-    return ecs_get_id(pixel.world, entity, pEcs_EntityLookupByName(component));
+    return ecs_get_id(pixel.world, entity, pEcs_LookupByName(component));
+}
+
+void pEcsComponent_SetEmptyByString(ecs_entity_t entity, const char *component)
+{
+    ecs_add_id(pEcs_World(), entity, pEcs_LookupByName(component));
 }

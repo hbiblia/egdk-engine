@@ -1,5 +1,5 @@
 #include <glib.h>
-#include "string_fn.h"
+#include "utility/string_fn.h"
 #include <stdarg.h>
 #include <string.h>
 

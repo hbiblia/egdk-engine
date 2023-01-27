@@ -1,12 +1,10 @@
-#pragma once
-
 #ifndef _PIXEL_H
 #define _PIXEL_H
 
-#include "pixel-struct.h"
 #define CIMGUI_DEFINE_ENUMS_AND_STRUCTS
 #include "cimgui/cimgui.h"
 
+#include "pixel-struct.h"
 
 typedef struct pixel_event_t
 {
@@ -44,6 +42,7 @@ typedef enum
     RESOUCE_ICON_ANIM,
     RESOUCE_ICON_ACTOR,
     RESOUCE_ICON_COMPONENT,
+    RESOUCE_ICON_NO_TEXTURE,
     RESOUCE_ICONS
 } pixel_resource_icons;
 
@@ -113,6 +112,7 @@ void pGfx_SetScale(float sx, float sy, float x, float y);
 void pGfx_SetTranslate(float x, float y);
 void pGfx_DrawFilledRect(float x, float y, float w, float h);
 void pGfx_DrawCheckboard(int width, int height, int screen_width, int screen_height);
+void pGfx_DrawTexture(const texture_t texture, const transform_t transform);
 
 /***
  *
@@ -135,6 +135,16 @@ void pTransform_End(void);
 
 texture_t pTexture_LoadFile(const char *filename);
 void pTexture_Free(texture_t texture);
+
+/***
+ *
+ *  struct PixelBase
+ *
+ *  PixelColor
+ *
+ */
+
+color_t pColor_RGBToFloat(uint8_t r, uint8_t g, uint8_t b);
 
 /***
  *

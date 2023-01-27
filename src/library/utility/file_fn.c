@@ -1,7 +1,7 @@
-#include "file_fn.h"
+#include "utility/file_fn.h"
 #include "pixel/pixel.h"
-#include "path_fn.h"
-#include "string_fn.h"
+#include "utility/path_fn.h"
+#include "utility/string_fn.h"
 
 /*
  * Name: FileIsExtension

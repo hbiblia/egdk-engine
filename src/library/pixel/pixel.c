@@ -2,9 +2,9 @@
 
 #include "pixel-ecs.h"
 
-#include "path_fn.h"
-#include "string_fn.h"
-#include "file_fn.h"
+#include "utility/path_fn.h"
+#include "utility/string_fn.h"
+#include "utility/file_fn.h"
 
 #define SOKOL_IMPL
 #define SOKOL_NO_ENTRY
@@ -98,8 +98,6 @@ static void pApp_Frame(void)
 
     if (pixel.Window.draw_fn)
         pixel.Window.draw_fn((float)pWindow_DeltaTime());
-
-    pEcs_Progress();
 
     sg_pass_action pass_action = {0};
     sg_begin_default_pass(&pass_action, pWindow_GetWidth(), pWindow_GetHeight());
@@ -218,11 +216,7 @@ void pGfx_ClearColor(color_t color)
 
 void pGfx_SetColor(color_t color)
 {
-    float r = (float)color.r / 255;
-    float g = (float)color.g / 255;
-    float b = (float)color.b / 255;
-    float a = (float)color.a / 255;
-    sgp_set_color(r, g, b, a);
+    sgp_set_color(color.r, color.g, color.b, color.a);
 }
 
 void pGfx_SetRotate(float theta, float x, float y)
@@ -247,15 +241,50 @@ void pGfx_DrawFilledRect(float x, float y, float w, float h)
 
 void pGfx_DrawCheckboard(int width, int height, int screen_width, int screen_height)
 {
-    pGfx_SetColor((color_t){25, 25, 25, 255});
+    pGfx_SetColor(pColor_RGBToFloat(13, 10, 14));
     sgp_clear();
-    pGfx_SetColor((color_t){35, 35, 35, 255});
+    pGfx_SetColor(pColor_RGBToFloat(17, 14, 18));
 
     for (int y = 0; y < screen_height / height + 1; y++)
         for (int x = 0; x < screen_width / width + 1; x++)
             if ((x + y) % 2 == 0)
                 pGfx_DrawFilledRect(x * width, y * height, width, height);
     sgp_reset_color();
+}
+
+void pGfx_DrawTexture(const texture_t texture, const transform_t transform)
+{
+    if (texture.id > 0)
+    {
+        float w = texture.width;
+        float h = texture.height;
+
+        pTransform_BeginMake(transform);
+        {
+            sgp_set_image(0, (sg_image){.id = texture.id});
+            sgp_set_blend_mode(SGP_BLENDMODE_BLEND);
+            sgp_draw_textured_rect(0, 0, w, h);
+            sgp_reset_blend_mode();
+            sgp_unset_image(0);
+        }
+        pTransform_End();
+    }
+}
+
+/***
+ *
+ *  struct PixelBase
+ *
+ *  PixelColor
+ *
+ */
+
+color_t pColor_RGBToFloat(uint8_t r, uint8_t g, uint8_t b)
+{
+    float fr = (float)((float)r / 255);
+    float fg = (float)((float)g / 255);
+    float fb = (float)((float)b / 255);
+    return (color_t){fr, fg, fb, 1.0f};
 }
 
 /***
@@ -330,9 +359,9 @@ void pResource_Init(void)
 {
     printf("INFO: Resource Init\n");
     pixel.Window.Resource.pathr[RESOURCE_PATH_ASSETS_ENGINE] = PathBuild(PathPwd(), "resource", NULL);
-    printf("A: %s\n", pixel.Window.Resource.pathr[RESOURCE_PATH_ASSETS_ENGINE]);
 
     pixel.Window.Resource.icons[RESOUCE_ICON_FOLDER] = pTexture_LoadFile(PathBuild(pixel.Window.Resource.pathr[RESOURCE_PATH_ASSETS_ENGINE], "textures", "folder.png", NULL));
+    pixel.Window.Resource.icons[RESOUCE_ICON_NO_TEXTURE] = pTexture_LoadFile(PathBuild(pixel.Window.Resource.pathr[RESOURCE_PATH_ASSETS_ENGINE], "textures", "no_texture.png", NULL));
 }
 
 void pResource_ProjectInit(const char *path)

@@ -1,8 +1,13 @@
 #include "ui-docked-inspector.h"
 #include "pixel/pixel.h"
 #include "pixel/pixel-ecs.h"
+#include "pixel/pixel-struct.h"
+#include "pixel/pixel-meta-struct.h"
+#include "pixel/pixel-components.h"
 #include "single-file.h"
-#include "string_fn.h"
+#include "utility/string_fn.h"
+#include "utility/file_fn.h"
+#include "utility/path_fn.h"
 
 static EditorSingleFile *single;
 
@@ -25,7 +30,7 @@ void editor_gui_inspector_draw(void)
         }
         else
         {
-            ecs_type_t *type = pEcs_EntityGetType(selected);
+            const ecs_type_t *type = pEcs_EntityGetType(selected);
 
             for (int i = 0; i < type->count; i++)
             {
@@ -50,6 +55,23 @@ void editor_gui_inspector_draw(void)
                 float WindowWidth = igGetWindowWidth();
                 if (igButton("+ Component", (ImVec2){WindowWidth - 15, 0}))
                 {
+                    igOpenPopup_Str("inspector-list-components", 0);
+                }
+                if (igBeginPopup("inspector-list-components", ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysUseWindowPadding))
+                {
+                    const char *componets[] = {pEcsComponent_GetListStr};
+                    int index = 0;
+                    while(1)
+                    {
+                        const char *name = componets[index];
+                        if(name == NULL)break;
+                        if (igMenuItem_Bool(name, NULL, false, true))
+                        {
+                            pEcsComponent_SetEmptyByString(single->entity_selected, name);
+                        }
+                        index++;
+                    }
+                    igEndPopup();
                 }
                 igPopItemWidth();
             }
@@ -76,6 +98,8 @@ void inspector_field_end(void)
 
 void inspector_component_props_draw(const char *name, const void *ptr, ecs_entity_t component)
 {
+    if(!pEcs_EntityIsValid(component))return;
+
     const ImGuiTreeNodeFlags flags_treenode = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
     igPushStyleVar_Vec2(ImGuiStyleVar_FramePadding, (ImVec2){4.0f, 4.0f});
@@ -144,7 +168,7 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                             ecs_meta_set_int(&cur, field);
                         }
                     }
-                    else if (pEcsComponent_GetId(COMPONENT_ID_VEC2_T) == field_type)
+                    else if (component_id(vec2_t) == field_type)
                     {
                         vec2_t *field = (vec2_t *)ecs_meta_get_ptr(&cur);
                         float field_v[2] = {field->x, field->y};
@@ -154,16 +178,46 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                             field->y = field_v[1];
                         }
                     }
-                    else if (pEcsComponent_GetId(COMPONENT_ID_COLOR_T) == field_type)
+                    else if (component_id(color_t) == field_type)
                     {
                         color_t *field = (color_t *)ecs_meta_get_ptr(&cur);
-                        float field_v[4] = {field->r / 255, field->g / 255, field->b / 255, field->a / 255};
+                        float field_v[4] = {field->r, field->g, field->b, field->a};
                         if (igColorEdit4("", &field_v, 0))
                         {
-                            field->r = field_v[0] * 255;
-                            field->g = field_v[1] * 255;
-                            field->b = field_v[2] * 255;
-                            field->a = field_v[3] * 255;
+                            field->r = field_v[0];
+                            field->g = field_v[1];
+                            field->b = field_v[2];
+                            field->a = field_v[3];
+                        }
+                    }
+                    else if (32 == field_type)
+                    {
+                        // color_t *field = (color_t *)ecs_meta_get_ptr(&cur);
+                        const char *items[] = {"1", "2"};
+                        static int current_item = 0;
+                        if (igCombo_Str_arr("", &current_item, items, 2, 5))
+                        {
+                        }
+                    }
+                    else if (component_id(texture_t) == field_type)
+                    {
+                        texture_t t;
+                        texture_t *field = (texture_t *)ecs_meta_get_ptr(&cur);
+                        t.id = field->id == 0 ? pResource_GetIconId(RESOUCE_ICON_NO_TEXTURE) : field->id;
+                        igImage((ImTextureID){t.id}, (ImVec2){64, 64}, (ImVec2){0, 0}, (ImVec2){1, 1}, (ImVec4){1, 1, 1, 1}, (ImVec4){0.5f, 0.5f, 0.8f, 1});
+
+                        if (igBeginDragDropTarget())
+                        {
+                            ImGuiPayload *pay = igAcceptDragDropPayload("browser_file_drag", ImGuiDragDropFlags_SourceNoDisableHover);
+                            if (pay)
+                            {
+                                FileDirFile *file = pay->Data;
+                                texture_t t01 = pTexture_LoadFile(PathBuild(file->path, file->filename, NULL));
+                                field->id = t01.id;
+                                field->width = t01.width;
+                                field->height = t01.height;
+                                igEndDragDropTarget();
+                            }
                         }
                     }
                 }
