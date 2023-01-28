@@ -93,6 +93,7 @@
         "entity.h": "c",
         "pixel-struct.h": "c",
         "pixel-meta-struct.h": "c",
-        "pixel-components.h": "c"
+        "pixel-components.h": "c",
+        "algorithm": "c"
     }
 }

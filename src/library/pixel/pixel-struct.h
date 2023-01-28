@@ -25,8 +25,8 @@ typedef struct
 {
     float x;
     float y;
-    uint16_t w;
-    uint16_t h;
+    float w;
+    float h;
 } rect_t;
 
 typedef struct
@@ -52,6 +52,8 @@ typedef struct
     float opacity;
     bool flipX;
     bool flipY;
+    rect_t dest_rect;
+    rect_t src_rect;
 } sprite_t;
 
 typedef struct

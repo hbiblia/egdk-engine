@@ -252,22 +252,19 @@ void pGfx_DrawCheckboard(int width, int height, int screen_width, int screen_hei
     sgp_reset_color();
 }
 
-void pGfx_DrawTexture(const texture_t texture, const transform_t transform)
+void pGfx_DrawTexture(texture_t texture, rect_t source, rect_t dest, color_t tint)
 {
     if (texture.id > 0)
     {
-        float w = texture.width;
-        float h = texture.height;
-
-        pTransform_BeginMake(transform);
-        {
-            sgp_set_image(0, (sg_image){.id = texture.id});
-            sgp_set_blend_mode(SGP_BLENDMODE_BLEND);
-            sgp_draw_textured_rect(0, 0, w, h);
-            sgp_reset_blend_mode();
-            sgp_unset_image(0);
-        }
-        pTransform_End();
+        sgp_set_image(0, (sg_image){.id = texture.id});
+        sgp_set_blend_mode(SGP_BLENDMODE_BLEND);
+        pGfx_SetColor(tint);
+        sgp_draw_textured_rect_ex(0,
+            (sgp_rect){dest.x, dest.y, dest.w, dest.h},
+            (sgp_rect){source.x, source.y, source.w, source.h}
+        );
+        sgp_reset_blend_mode();
+        sgp_unset_image(0);
     }
 }
 

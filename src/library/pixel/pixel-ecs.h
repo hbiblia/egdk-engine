@@ -28,6 +28,7 @@ ecs_entity_t pEcs_EntityNew(void);
 ecs_entity_t pEcs_EntityEmptyNew(void);
 ecs_entity_t pEcs_EntityClone(ecs_entity_t entity);
 void pEcs_EntityDelete(ecs_entity_t entity);
+void pEcs_EntitySetEnable(ecs_entity_t entity, bool enable);
 
 void pEcs_EntitySetParent(ecs_entity_t parent, ecs_entity_t entity);
 void pEcs_EntitySetParentUnSafe(ecs_entity_t parent, ecs_entity_t entity);

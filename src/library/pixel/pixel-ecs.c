@@ -90,9 +90,12 @@ ecs_entity_t pEcs_EntityNew(void)
     ecs_entity_t e = pEcs_EntityEmptyNew();
 
     pEcs_EntitySet(e, entity_info_t, {
-            .enable = true, .name = String("New Entity"),
-            .scale = {1, 1}, .rotation = 0, .position = {0, 0},
-    });
+                                         .enable = true,
+                                         .name = String("New Entity"),
+                                         .scale = {1, 1},
+                                         .rotation = 0,
+                                         .position = {0, 0},
+                                     });
 
     return e;
 }
@@ -102,9 +105,17 @@ ecs_entity_t pEcs_EntityEmptyNew(void)
     return ecs_new_id(pixel.world);
 }
 
+void pEcs_EntitySetEnable(ecs_entity_t entity, bool enable)
+{
+    ecs_enable(pixel.world, entity, enable);
+}
+
 ecs_entity_t pEcs_EntityClone(ecs_entity_t entity)
 {
     ecs_entity_t clone = ecs_clone(pixel.world, 0, entity, true);
+
+    // FIX
+    pEcs_EntitySetName(clone, pEcs_EntityGetName(entity));
 
     // ---------------------------------
     // Copiamos los hijos si tiene
@@ -207,20 +218,17 @@ bool pEcs_EntityChildrenNext(ecs_iter_t *it)
     return ecs_children_next(it);
 }
 
-// Las entidades tienen nombres unicos, no existe una entidad
-// con el mismo nombre. Pero vamos a crear un component para
-// guardar ese tipo de dato para que podamos tener entidades
-// sin nombres y guardamos esos datos en un componente.
 void pEcs_EntitySetName(ecs_entity_t entity, const char *name)
 {
     entity_info_t *info = pEcs_EntityGet(entity, entity_info_t);
+    free(info->name);
     info->name = String(name);
 }
 
 const char *pEcs_EntityGetName(ecs_entity_t entity)
 {
-    entity_info_t *info = pEcs_EntityGet(entity, entity_info_t);
-    return String(info->name);
+    entity_info_t info = *(entity_info_t *)pEcs_EntityGet(entity, entity_info_t);
+    return String(info.name);
 }
 
 /***

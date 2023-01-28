@@ -32,7 +32,10 @@ void editor_gui_inspector_draw(void)
         {
             const ecs_type_t *type = pEcs_EntityGetType(selected);
 
-            for (int i = 0; i < type->count; i++)
+            // fix-bug: Cuando tenias una entidad padre con x componentes
+            // los hijos repetian el primer componente por defecto la misma
+            // cantidad. (type->count-1)
+            for (uint32_t i = (type->count - 1); i <= type->count; i--)
             {
                 ecs_id_t id = type->array[i];
                 ecs_entity_t component = ecs_pair_second(pEcs_World(), id);
@@ -61,10 +64,11 @@ void editor_gui_inspector_draw(void)
                 {
                     const char *componets[] = {pEcsComponent_GetListStr};
                     int index = 0;
-                    while(1)
+                    while (1)
                     {
                         const char *name = componets[index];
-                        if(name == NULL)break;
+                        if (name == NULL)
+                            break;
                         if (igMenuItem_Bool(name, NULL, false, true))
                         {
                             pEcsComponent_SetEmptyByString(single->entity_selected, name);
@@ -98,7 +102,8 @@ void inspector_field_end(void)
 
 void inspector_component_props_draw(const char *name, const void *ptr, ecs_entity_t component)
 {
-    if(!pEcs_EntityIsValid(component))return;
+    if (!pEcs_EntityIsValid(component))
+        return;
 
     const ImGuiTreeNodeFlags flags_treenode = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
@@ -136,13 +141,14 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                     if (ecs_id(ecs_string_t) == field_type)
                     {
                         const char *field = ecs_meta_get_string(&cur);
-                        char *buffer = String(field);
-                        if (igInputText("", buffer, MAX_INPUT_TEXT, ImGuiInputTextFlags_EnterReturnsTrue, NULL, NULL))
+                        char buffer[32];
+                        sprintf(buffer, "%s",field);
+                        if (igInputText("", &buffer, MAX_INPUT_TEXT, ImGuiInputTextFlags_EnterReturnsTrue, NULL, NULL))
                         {
-                            if (strcmp(field, "Root") != 0)
-                                ecs_meta_set_string(&cur, String(buffer));
+                            fflush(stdin);
+                            if (strcmp(buffer, "Root") && strcmp(field, "Root") != 0 && strcmp(buffer,"")!=0)
+                                ecs_meta_set_string(&cur, buffer);
                         }
-                        free(buffer);
                     }
                     else if (ecs_id(ecs_bool_t) == field_type)
                     {
@@ -188,15 +194,6 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                             field->g = field_v[1];
                             field->b = field_v[2];
                             field->a = field_v[3];
-                        }
-                    }
-                    else if (32 == field_type)
-                    {
-                        // color_t *field = (color_t *)ecs_meta_get_ptr(&cur);
-                        const char *items[] = {"1", "2"};
-                        static int current_item = 0;
-                        if (igCombo_Str_arr("", &current_item, items, 2, 5))
-                        {
                         }
                     }
                     else if (component_id(texture_t) == field_type)

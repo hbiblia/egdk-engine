@@ -112,7 +112,7 @@ void pGfx_SetScale(float sx, float sy, float x, float y);
 void pGfx_SetTranslate(float x, float y);
 void pGfx_DrawFilledRect(float x, float y, float w, float h);
 void pGfx_DrawCheckboard(int width, int height, int screen_width, int screen_height);
-void pGfx_DrawTexture(const texture_t texture, const transform_t transform);
+void pGfx_DrawTexture(texture_t texture, rect_t source, rect_t dest, color_t tint);
 
 /***
  *
