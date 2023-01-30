@@ -52,9 +52,19 @@ typedef struct
     float opacity;
     bool flipX;
     bool flipY;
+    // config spriteSheet
+    uint32_t Hframes;
+    uint32_t Vframes;
+    uint32_t frame;
+    // hide params
     rect_t dest_rect;
     rect_t src_rect;
 } sprite_t;
+
+typedef struct
+{
+    int n;
+}animated_t;
 
 typedef struct
 {

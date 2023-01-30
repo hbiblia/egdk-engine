@@ -129,9 +129,9 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
             for (int i = 0; i < ECS_MEMBER_DESC_CACHE_SIZE; i++)
             {
                 const char *field_name = ecs_meta_get_member(&cur);
+
                 if (field_name == NULL)
                     break;
-
                 // ----------------
                 // type props field
                 // ----------------
@@ -156,6 +156,7 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                         if (igCheckbox("", &field))
                         {
                             ecs_meta_set_bool(&cur, field);
+                            // ecs_modified_id(pEcs_World(), single->entity_selected, component);
                         }
                     }
                     else if (ecs_id(ecs_f32_t) == field_type)
@@ -166,7 +167,7 @@ void inspector_component_props_draw(const char *name, const void *ptr, ecs_entit
                             ecs_meta_set_float(&cur, field);
                         }
                     }
-                    else if (ecs_id(ecs_u8_t) == field_type)
+                    else if (ecs_id(ecs_u8_t) == field_type || ecs_id(ecs_i32_t) == field_type)
                     {
                         int64_t field = (float)ecs_meta_get_int(&cur);
                         if (igInputInt("", &field, 1, 2, 0))

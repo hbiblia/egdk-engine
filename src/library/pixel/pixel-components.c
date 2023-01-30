@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "pixel-components.h"
 #include "pixel-struct.h"
 #include "pixel-meta-struct.h"
@@ -17,19 +18,17 @@ void pComponent_EntityOnSet(ecs_iter_t *it)
     for (int i = 0; i < it->count; i++)
     {
         pEcs_EntitySetEnable(it->entities[i], s[i].enable);
-        printf("Enable: %d\n",s[i].enable);
+        printf("Enable: %d\n", s[i].enable);
     }
 }
 
 void pComponent_EntityInit(ecs_world_t *world)
 {
-    ecs_observer(world, {
-        .filter = {
-            .terms = {{.id = component_id(entity_info_t)}},
-        },
-        .events = {EcsOnSet},
-        .callback = pComponent_EntityOnSet
-    });
+    ecs_observer(world, {.filter = {
+                             .terms = {{.id = component_id(entity_info_t)}},
+                         },
+                         .events = {EcsOnSet},
+                         .callback = pComponent_EntityOnSet});
 }
 
 /***
@@ -43,6 +42,9 @@ void pComponent_SpriteOnAdd(ecs_iter_t *it)
     sprite_t *s = ecs_field(it, sprite_t, 1);
     s->color = ((color_t){1.0f, 1.0f, 1.0f, 1.0f});
     s->opacity = 1.0f;
+    s->Hframes = 1;
+    s->Vframes = 1;
+    s->frame = 0;
 }
 
 void pComponent_SpriteOnStore(ecs_iter_t *it)
@@ -51,32 +53,35 @@ void pComponent_SpriteOnStore(ecs_iter_t *it)
     entity_info_t *entity = ecs_field(it, entity_info_t, 2);
     for (int i = 0; i < it->count; i++)
     {
-        float sw = s[i].src_rect.w == 0 ? s[i].texture.width : s[i].src_rect.w;
-        float sh = s[i].src_rect.h == 0 ? s[i].texture.height : s[i].src_rect.h;
+        if (entity->enable == true && s[i].texture.id > 0)
+        {
+            color_t tint = s[i].color;
 
-        float dw = s[i].dest_rect.w == 0 ? s[i].texture.width : s[i].dest_rect.w;
-        float dh = s[i].dest_rect.h == 0 ? s[i].texture.height : s[i].dest_rect.h;
+            int textureWidth = s[i].texture.width;
+            int textureHeight = s[i].texture.height;
 
-        // color y opacity
-        color_t tint    = s[i].color;
-        tint.a = s[i].opacity;
+            rect_t dst = (rect_t){0, 0, (float)textureWidth, (float)textureHeight};
+            rect_t src = dst;
 
-        // flip
-        sw = s[i].flipX ? sw * -1 : sw;
-        sh = s[i].flipY ? sh * -1 : sh;
+            int frameWidth = (textureWidth / s[i].Hframes);
+            int frameHeight = (textureHeight / s[i].Vframes);
 
-        // offset
-        float offsetX   = s[i].dest_rect.x;
-        float offsetY   = s[i].dest_rect.y;
+            // color y opacity
+            tint.a = s[i].opacity;
+            // Clip
+            if (frameWidth != textureWidth || frameHeight != textureHeight)
+            {
+                dst.w = src.w = frameWidth;
+                dst.h = src.h = frameHeight;
+                src.x = (float)(s[i].frame % (int)(textureWidth / frameWidth)) * frameWidth;
+                src.y = (float)(s[i].frame / (textureWidth / frameHeight)) * frameHeight;
+            }
+            // flip source
+            src.w = s[i].flipX ? (src.w * -1) : src.w;
+            src.h = s[i].flipY ? (src.h * -1) : src.h;
 
-        // clip
-        float clipX     = s[i].src_rect.x;
-        float clipY     = s[i].src_rect.y;
-
-        rect_t source   = (rect_t){.x = clipX, .y = clipY, .w = sw, .h = sh};
-        rect_t dest     = (rect_t){.x = offsetX, .y = offsetY, .w = dw, .h = dh};
-
-        pGfx_DrawTexture(s[i].texture, source, dest, tint);
+            pGfx_DrawTexture(s[i].texture, src, dst, tint);
+        }
     }
 }
 

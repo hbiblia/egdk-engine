@@ -94,6 +94,7 @@
         "pixel-struct.h": "c",
         "pixel-meta-struct.h": "c",
         "pixel-components.h": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "cmath": "c"
     }
 }

@@ -15,7 +15,7 @@ static void docked_begin_content(void);
 
 void ui_editor_main_init(void)
 {
-    pResource_ProjectInit("D:/Github/egdk-engine/examples/sprites");
+    pResource_ProjectInit("D:/Trabajo/StudioGeeky/Munchsters/Munchsters_EGDK");
 
     editor_gui_browser_init();
     editor_gui_viewport_init();

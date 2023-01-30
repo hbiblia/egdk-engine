@@ -80,6 +80,9 @@ void pEscMetaStruct_Init(ecs_world_t *world)
             {.name = "Opacity", .type = ecs_id(ecs_f32_t)},
             {.name = "FlipX", .type = ecs_id(ecs_bool_t)},
             {.name = "FlipY", .type = ecs_id(ecs_bool_t)},
+            {.name = "Hframes", .type = ecs_id(ecs_i32_t)},
+            {.name = "Vframes", .type = ecs_id(ecs_i32_t)},
+            {.name = "frame", .type = ecs_id(ecs_i32_t)},
         }
     });
 
